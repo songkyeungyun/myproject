@@ -27,6 +27,8 @@ class Isaac:
         self.dir_y = 0
         self.image = load_image('Image/animation.png')
         self.isaac_image = load_image('Image/isaac.png')
+        self.head_image = load_image('Image/1png.png')
+        self.head_1_image = load_image('Image/2.png')
 
     def update(self):
         self.frame = (self.frame + 1) % 8
@@ -52,12 +54,18 @@ class Isaac:
     def draw(self):
         if self.dir_x == 1:
             self.image.clip_draw(self.frame * 49, 0, 45, 80, self.x, self.y)
+            if tear.item == 'tear':
+                self.head_1_image.draw(self.x-5, self.y-6)
         elif self.dir_x == -1:
             self.image.clip_composite_draw(self.frame * 50, 0, 45, 80, 3.141592, 'v', self.x, self.y, 45, 80)
+            if tear.item == 'tear':
+                self.head_image.draw(self.x, self.y - 23)
         elif self.dir_y == -1 or self.dir_y == 1:
             self.image.clip_draw(self.frame * 49, 90, 50, 80, self.x, self.y)
         elif self.dir_x == 0:
             self.isaac_image.draw(self.x, self.y-10)
+            if tear.item == 'tear':
+                self.head_image.draw(self.x+2, self.y - 25)
 
 class Tear:
     def __init__(self):
