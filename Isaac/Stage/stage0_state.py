@@ -10,6 +10,7 @@ from isaac import Isaac
 from tear import Tear
 from monster1 import Monster_1
 from monster2 import Monster_2
+
 isaac = None
 stage = None
 monster1 = None
