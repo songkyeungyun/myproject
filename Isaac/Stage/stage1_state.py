@@ -92,6 +92,8 @@ def enter():
     stage = Stage()
     tear = Tear()
     running = True
+    isaac.x = 680
+    isaac.y = 250
     pass
 
 # 게임 종료 - 객체를 소멸
@@ -103,7 +105,7 @@ def exit():
 def update():
     isaac.update()
     tear.update()
-    if isaac.x >= 730 and 245 <= isaac.y <= 285:
+    if isaac.x >= 700 and 245 <= isaac.y <= 285:
         isaac.dir_x = 0
         isaac.dir_y = 0
         game_framework.pop_state()

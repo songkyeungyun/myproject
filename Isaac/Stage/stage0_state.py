@@ -114,17 +114,17 @@ def update():
     monster1.update()
     monster2.update()
     tear.update()
-    if isaac.x <= 70 and 245 <= isaac.y <= 285:
+    if isaac.x <= 100 and 245 <= isaac.y <= 285:
         isaac.dir_x = 0
         isaac.dir_y = 0
         isaac.x = 120
         game_framework.push_state(stage1_state)
-    elif isaac.y >= 430 and 380 <= isaac.x <= 420:
+    elif isaac.y >= 400 and 380 <= isaac.x <= 420:
         isaac.dir_x = 0
         isaac.dir_y = 0
-        isaac.y = 410
+        isaac.y = 420
         game_framework.push_state(stage2_state)
-    elif isaac.y <= 80 and 380 <= isaac.x <= 420:
+    elif isaac.y <= 100 and 380 <= isaac.x <= 420:
         isaac.dir_x = 0
         isaac.dir_y = 0
         isaac.y = 120

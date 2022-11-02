@@ -1,6 +1,27 @@
 from pico2d import *
 import game_framework
 
+
+# RD, LD, RU, LU, WD, SD, WU, SU = range(8)
+#
+# key_event_table = {
+#     (SDL_KEYDOWN, SDLK_RIGHT): RD,
+#     (SDL_KEYDOWN, SDLK_LEFT): LD,
+#     (SDL_KEYUP, SDLK_RIGHT): RU,
+#     (SDL_KEYUP, SDLK_LEFT): LU,
+#     (SDL_KEYDOWN, SDLK_UP): WD,
+#     (SDL_KEYDOWN, SDLK_DOWN): SD,
+#     (SDL_KEYUP, SDLK_UP): WU,
+#     (SDL_KEYUP, SDLK_DOWN): SU
+# }
+#
+#
+# next_state = {
+#     IDLE: {RU: RUN, LU: RUN, RD: RUN, LD: RUN, TIMER: SLEEP, AU: AUTO},
+#     RUN: {RU: IDLE, LU: IDLE, LD: IDLE, LD: IDLE, AU: AUTO},
+#     SLEEP: {RU: RUN, LU: RUN, RD: RUN, LD: RUN},
+#     AUTO: {AU: IDLE, RD: RUN, LD: RUN, RU: RUN, LU: RUN}
+# }
 class Isaac:
     def __init__(self):
         self.x = 400
@@ -10,8 +31,6 @@ class Isaac:
         self.dir_y = 0
         self.image = load_image('Image/animation.png')
         self.isaac_image = load_image('Image/isaac.png')
-        self.head_image = load_image('Image/1png.png')
-        self.head_1_image = load_image('Image/2.png')
 
     def update(self):
         self.frame = (self.frame + 1) % 8
