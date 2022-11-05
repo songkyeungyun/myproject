@@ -4,7 +4,7 @@ import game_world
 
 
 RD, LD, RU, LU, WD, SD, WU, SU, SPACE = range(9)
-event_name = ['RD', 'LD', 'RU', 'LU', 'TIMER', 'SPACE', 'WD', 'SD', 'WU', 'SU']
+event_name = ['RD', 'LD', 'RU', 'LU', 'SPACE', 'WD', 'SD', 'WU', 'SU']
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_SPACE): SPACE,
@@ -40,63 +40,78 @@ class IDLE:
             self.isaac_image.draw(self.x, self.y - 10)
 
 
-class RLRUN:
+class RUN:
     def enter(self, event):
         if event == RD:
             self.dir_x += 1
-        elif event == LD:
+        if event == LD:
             self.dir_x -= 1
-        elif event == RU:
+        if event == RU:
             self.dir_x -= 1
-        elif event == LU:
+        if event == LU:
             self.dir_x += 1
+
+        if event == WD:
+            self.dir_y += 1
+        if event == SD:
+            self.dir_y -= 1
+        if event == WU:
+            self.dir_y -= 1
+        if event == SU:
+            self.dir_y += 1
 
     def exit(self, event):
         self.face_dir = self.dir_x
         if SPACE == event:
             self.fire_ball()
 
+
     def do(self):
         self.frame = (self.frame + 1) % 8
         self.x += self.dir_x
-        self.x = clamp(0, self.x, 800)
+        self.x = clamp(100, self.x, 700)
+        self.y += self.dir_y
+        self.y = clamp(100, self.y, 400)
 
     def draw(self):
         if self.dir_x == 1:
             self.image.clip_draw(self.frame * 49, 0, 45, 80, self.x, self.y)
         elif self.dir_x == -1:
             self.image.clip_composite_draw(self.frame * 50, 0, 45, 80, 3.141592, 'v', self.x, self.y, 45, 80)
-
-class UDRUN:
-    def enter(self, event):
-        if event == WD:
-            self.dir_y += 1
-        elif event == SD:
-            self.dir_y -= 1
-        elif event == WU:
-            self.dir_y -= 1
-        elif event == SU:
-            self.dir_y += 1
-
-    def exit(self, event):
-        self.face_dir = self.dir_y
-        if SPACE == event:
-            self.fire_ball()
-
-    def do(self):
-        self.frame = (self.frame + 1) % 8
-        self.y += self.dir_y
-        self.y = clamp(100, self.y, 400)
-
-    def draw(self):
-        if self.dir_y == -1 or self.dir_y == 1:
+        elif self.dir_y == -1 or self.dir_y == 1:
             self.image.clip_draw(self.frame * 49, 90, 50, 80, self.x, self.y)
+        if self.dir_x == 0:
+            self.isaac_image.draw(self.x, self.y-10)
+
+# class UDRUN:
+#     def enter(self, event):
+#         if event == WD:
+#             self.dir_y += 1
+#         elif event == SD:
+#             self.dir_y -= 1
+#         elif event == WU:
+#             self.dir_y -= 1
+#         elif event == SU:
+#             self.dir_y += 1
+#
+#     def exit(self, event):
+#         self.face_dir = self.dir_y
+#         if SPACE == event:
+#             self.fire_ball()
+#
+#     def do(self):
+#         self.frame = (self.frame + 1) % 8
+#         self.y += self.dir_y
+#         self.y = clamp(100, self.y, 400)
+#
+#     def draw(self):
+#         if self.dir_y == -1 or self.dir_y == 1:
+#             self.image.clip_draw(self.frame * 49, 90, 50, 80, self.x, self.y)
 
 
 next_state = {
-    IDLE: {RU: RLRUN, LU: RLRUN, RD: RLRUN, LD: RLRUN, WU: UDRUN, SU: UDRUN, WD: UDRUN, SD: UDRUN},
-    RLRUN: {RU: IDLE, LU: IDLE, LD: IDLE, LD: IDLE, WU: IDLE, SU: IDLE, WD: IDLE, SD: IDLE},
-    UDRUN: {RU: IDLE, LU: IDLE, LD: IDLE, LD: IDLE, WU: IDLE, SU: IDLE, WD: IDLE, SD: IDLE},
+    IDLE: {RU: RUN, LU: RUN, RD: RUN, LD: RUN, WU: RUN, SU: RUN, WD: RUN, SD: RUN, SPACE: IDLE},
+    RUN: {RU: RUN, LU: RUN, RD: RUN, LD: RUN, WU: RUN, SU: RUN, WD: RUN, SD: RUN, SPACE: RUN},
 }
 class Isaac:
     def __init__(self):
@@ -105,6 +120,7 @@ class Isaac:
         self.frame = 0
         self.dir_x = 0
         self.dir_y = 0
+        self.face_dir = 0
         self.image = load_image('Image/animation.png')
         self.isaac_image = load_image('Image/isaac.png')
 
@@ -139,4 +155,3 @@ class Isaac:
     def fire_ball(self):
         tear = Tear(self.x, self.y, self.face_dir * 2)
         game_world.add_object(tear, 1)
-        print('fire ball')
