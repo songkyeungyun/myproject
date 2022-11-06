@@ -27,7 +27,7 @@ class IDLE:
     @staticmethod
     def exit(self, event):
         if SPACE == event:
-            self.fire_ball()
+            self.attack()
 
     @staticmethod
     def do(self):
@@ -63,7 +63,7 @@ class RUN:
     def exit(self, event):
         self.face_dir = self.dir_x
         if SPACE == event:
-            self.fire_ball()
+            self.attack()
 
 
     def do(self):
@@ -83,30 +83,6 @@ class RUN:
         if self.dir_x == 0:
             self.isaac_image.draw(self.x, self.y-10)
 
-# class UDRUN:
-#     def enter(self, event):
-#         if event == WD:
-#             self.dir_y += 1
-#         elif event == SD:
-#             self.dir_y -= 1
-#         elif event == WU:
-#             self.dir_y -= 1
-#         elif event == SU:
-#             self.dir_y += 1
-#
-#     def exit(self, event):
-#         self.face_dir = self.dir_y
-#         if SPACE == event:
-#             self.fire_ball()
-#
-#     def do(self):
-#         self.frame = (self.frame + 1) % 8
-#         self.y += self.dir_y
-#         self.y = clamp(100, self.y, 400)
-#
-#     def draw(self):
-#         if self.dir_y == -1 or self.dir_y == 1:
-#             self.image.clip_draw(self.frame * 49, 90, 50, 80, self.x, self.y)
 
 
 next_state = {
@@ -152,6 +128,6 @@ class Isaac:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
 
-    def fire_ball(self):
-        tear = Tear(self.x, self.y, self.face_dir * 2)
+    def attack(self):
+        tear = Tear(self.x, self.y, self.x + 50)
         game_world.add_object(tear, 1)

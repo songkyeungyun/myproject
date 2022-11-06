@@ -5,7 +5,7 @@ import game_world
 class Tear:
     image = None
 
-    def __init__(self, x=800, y=300, velocity=1):
+    def __init__(self, x=700, y=400, velocity=1):
         if Tear.image == None:
             Tear.image = load_image('tear.png')
         self.x, self.y, self.velocity = x, y, velocity
