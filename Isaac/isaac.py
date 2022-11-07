@@ -61,17 +61,26 @@ class RUN:
             self.dir_y += 1
 
     def exit(self, event):
-        self.face_dir = self.dir_x
+        if self.dir_x == 0:
+            self.face_diry = self.dir_y
+        else:
+            self.face_dirx = self.dir_x
         if SPACE == event:
             self.attack()
 
 
     def do(self):
         self.frame = (self.frame + 1) % 8
-        self.x += self.dir_x
-        self.x = clamp(100, self.x, 700)
-        self.y += self.dir_y
-        self.y = clamp(100, self.y, 400)
+        self.x += self.dir_x / 2
+        self.y += self.dir_y / 2
+        if 245 < self.y < 285:
+            self.x = clamp(70, self.x, 730)
+        else:
+            self.x = clamp(100, self.x, 700)
+        if 380 < self.x < 420:
+            self.y = clamp(80, self.y, 420)
+        else:
+            self.y = clamp(100, self.y, 400)
 
     def draw(self):
         if self.dir_x == 1:
@@ -80,9 +89,8 @@ class RUN:
             self.image.clip_composite_draw(self.frame * 50, 0, 45, 80, 3.141592, 'v', self.x, self.y, 45, 80)
         elif self.dir_y == -1 or self.dir_y == 1:
             self.image.clip_draw(self.frame * 49, 90, 50, 80, self.x, self.y)
-        if self.dir_x == 0:
-            self.isaac_image.draw(self.x, self.y-10)
-
+        elif self.dir_x == 0:
+            self.isaac_image.draw(self.x, self.y - 10)
 
 
 next_state = {
@@ -96,7 +104,8 @@ class Isaac:
         self.frame = 0
         self.dir_x = 0
         self.dir_y = 0
-        self.face_dir = 0
+        self.face_dirx = 0
+        self.face_diry = 0
         self.image = load_image('Image/animation.png')
         self.isaac_image = load_image('Image/isaac.png')
 
@@ -129,5 +138,10 @@ class Isaac:
             self.add_event(key_event)
 
     def attack(self):
-        tear = Tear(self.x, self.y, self.x + 50)
+        if self.dir_x == 0 and self.dir_y ==0:
+            tear = Tear(self.x, self.y, self.face_dirx, self.face_diry)
+        elif self.dir_y == 0:
+            tear = Tear(self.x, self.y, self.dir_x * 2, 0)
+        elif self.dir_x == 0:
+            tear = Tear(self.x, self.y, 0, self.dir_y * 2)
         game_world.add_object(tear, 1)
