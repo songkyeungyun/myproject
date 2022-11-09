@@ -68,7 +68,7 @@ class RUN:
     def exit(self, event):
         if self.dir_x == 0:
             self.face_diry = self.dir_y
-        else:
+        elif self.dir_y == 0:
             self.face_dirx = self.dir_x
         if SPACE == event:
             self.attack()
@@ -151,9 +151,9 @@ class Isaac:
 
     def attack(self):
         if self.dir_x == 0 and self.dir_y ==0:
-            tear = Tear(self.x, self.y, self.face_dirx, self.face_diry)
+            tear = Tear(self.x, self.y, self.face_dirx * 3, self.face_diry * 3)
         elif self.dir_y == 0:
-            tear = Tear(self.x, self.y, self.dir_x * 2, 0)
+            tear = Tear(self.x, self.y, self.dir_x * 3, 0)
         elif self.dir_x == 0:
-            tear = Tear(self.x, self.y, 0, self.dir_y * 2)
+            tear = Tear(self.x, self.y, 0, self.dir_y * 3)
         game_world.add_object(tear, 1)
