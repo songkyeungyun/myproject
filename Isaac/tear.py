@@ -16,5 +16,5 @@ class Tear:
     def update(self):
         self.x += self.velocity
         self.y += self.v
-        if self.x < 100 or self.x > 700  or self.y < 100 or self.y > 400 :
+        if self.x < 100 or self.x > 700 or self.y < 100 or self.y > 400 :
             game_world.remove_object(self)

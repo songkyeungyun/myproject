@@ -1,6 +1,7 @@
 from pico2d import *
 from tear import Tear
 import game_world
+import game_framework
 
 
 RD, LD, RU, LU, WD, SD, WU, SU, SPACE = range(9)
@@ -18,6 +19,10 @@ key_event_table = {
     (SDL_KEYUP, SDLK_DOWN): SU
 }
 
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
+
 class IDLE:
     @staticmethod
     def enter(self, event):
@@ -31,7 +36,7 @@ class IDLE:
 
     @staticmethod
     def do(self):
-        self.frame = (self.frame + 1) % 8
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
 
 
     @staticmethod
@@ -70,9 +75,9 @@ class RUN:
 
 
     def do(self):
-        self.frame = (self.frame + 1) % 8
-        self.x += self.dir_x / 2
-        self.y += self.dir_y / 2
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        self.x += self.dir_x * RUN_SPEED_PPS * game_framework.frame_time
+        self.y += self.dir_y * RUN_SPEED_PPS * game_framework.frame_time
         if 245 < self.y < 285:
             self.x = clamp(70, self.x, 730)
         else:
@@ -84,11 +89,11 @@ class RUN:
 
     def draw(self):
         if self.dir_x == 1:
-            self.image.clip_draw(self.frame * 49, 0, 45, 80, self.x, self.y)
+            self.image.clip_draw(int(self.frame) * 49, 0, 45, 80, self.x, self.y)
         elif self.dir_x == -1:
-            self.image.clip_composite_draw(self.frame * 50, 0, 45, 80, 3.141592, 'v', self.x, self.y, 45, 80)
+            self.image.clip_composite_draw(int(self.frame) * 50, 0, 45, 80, 3.141592, 'v', self.x, self.y, 45, 80)
         elif self.dir_y == -1 or self.dir_y == 1:
-            self.image.clip_draw(self.frame * 49, 90, 50, 80, self.x, self.y)
+            self.image.clip_draw(int(self.frame) * 49, 90, 50, 80, self.x, self.y)
         elif self.dir_x == 0:
             self.isaac_image.draw(self.x, self.y - 10)
 
@@ -97,6 +102,13 @@ next_state = {
     IDLE: {RU: RUN, LU: RUN, RD: RUN, LD: RUN, WU: RUN, SU: RUN, WD: RUN, SD: RUN, SPACE: IDLE},
     RUN: {RU: RUN, LU: RUN, RD: RUN, LD: RUN, WU: RUN, SU: RUN, WD: RUN, SD: RUN, SPACE: RUN},
 }
+
+PIXEL_PER_METER = 10.0 / 0.3
+RUN_SPEED_KPH = 25
+RUN_SPEED_MPM = RUN_SPEED_KPH * 1000.0 / 60.0
+RUN_SPEED_MPS = RUN_SPEED_MPM / 60.0
+RUN_SPEED_PPS = RUN_SPEED_MPS * PIXEL_PER_METER
+
 class Isaac:
     def __init__(self):
         self.x = 400
