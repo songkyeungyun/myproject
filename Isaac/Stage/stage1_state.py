@@ -13,6 +13,7 @@ stage = None
 monster1 = None
 monster2 = None
 life = []
+item = None
 
 class Stage:
     def __init__(self):
@@ -44,8 +45,10 @@ def enter():
     game_world.add_object(monster2, 1)
     game_world.add_objects(life, 1)
 
+
     game_world.add_collision_group(isaac, monster1, 'isaac:monster1')
     game_world.add_collision_group(isaac, monster2, 'isaac:monster2')
+
 
     pass
 

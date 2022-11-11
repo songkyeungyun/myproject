@@ -34,7 +34,7 @@ def handle_events():
 
 def enter():
     global isaac, stage, monster1, monster2, life
-    isaac = Isaac()
+    isaac = Isaac(400, 380)
     stage = Stage()
     life = [Life() for i in range(3)]
     monster1 = Monster_1()

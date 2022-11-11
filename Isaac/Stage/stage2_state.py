@@ -5,14 +5,12 @@ import game_world
 
 
 from isaac import Isaac
-from monster1 import Monster_1
-from monster2 import Monster_2
 from life import Life
+from item import Item
 
 isaac = None
 stage = None
-monster1 = None
-monster2 = None
+item = None
 life = []
 
 class Stage:
@@ -33,6 +31,15 @@ def handle_events():
             isaac.handle_event(event)
 
 def enter():
+    global isaac, stage, life, item
+    isaac = stage0_state.isaac
+    isaac.x, isaac.y = 400, 120
+    stage = Stage()
+    item = Item()
+    life = [Life() for i in range(3)]
+    game_world.add_objects(life, 1)
+    game_world.add_object(item, 1)
+    game_world.add_collision_group(isaac, item, 'isaac:item')
 
     pass
 
