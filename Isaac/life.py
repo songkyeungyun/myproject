@@ -1,8 +1,7 @@
 from pico2d import *
 import game_world
 
-
-class Life:
+class Life():
     def __init__(self):
         Life.image = load_image('Image/life3.png')
         self.x = 600

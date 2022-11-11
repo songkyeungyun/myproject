@@ -1,5 +1,4 @@
 from pico2d import *
-
 import game_world
 
 class RedTear:
@@ -7,6 +6,7 @@ class RedTear:
     def __init__(self, x=700, y=400, velocity=1, v=1):
         RedTear.image = load_image('Image/red_tear.png')
         self.x, self.y, self.velocity, self.v = x, y, velocity, v
+
 
     def draw(self):
         self.image.draw(self.x, self.y)

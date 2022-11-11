@@ -6,7 +6,7 @@ import game_framework
 import time
 
 from life import Life
-import Stage.stage0_state as stage0_state
+import Stage.stage1_state as stage1_state
 
 NULL, RD, LD, RU, LU, WD, SD, WU, SU, SPACE = range(10)
 event_name = ['Null','RD', 'LD', 'RU', 'LU', 'SPACE', 'WD', 'SD', 'WU', 'SU']
@@ -144,16 +144,20 @@ class Isaac:
         self.face_diry = 0
         self.life = 3
         self.change = False
-
+        if self.change == False:
+            self.image = load_image('Image/animation.png')
+        else:
+            self.image = load_image('Image/red_animation.png')
         self.time = 0
         self.cur_time = 0
         self.timer = 0
 
-        self.image = load_image('Image/animation.png')
-        self.isaac_image = load_image('Image/isaac.png')
-        self.isaac_attack_image = load_image('Image/attack isaac.png')
+        self.pick = False
+        self.red = False
 
-        self.key = [False,False,False,False] # 0=left 1=right 2=down 3=up
+        self.isaac_image = load_image('Image/isaac.png')
+
+        self.key = [False, False, False, False]# 0=left 1=right 2=down 3=up
 
         self.event_que = []
         self.cur_state = IDLE
@@ -173,11 +177,10 @@ class Isaac:
 
             self.cur_state.enter(self, event)
         if self.timer < 1:
-            self.isaac_image = load_image('Image/pick_item.png')
-        elif self.timer > 1000:
-            self.isaac_image = load_image('Image/isaac.png')
+            self.pick = True
         else:
-            self.isaac_image = load_image('Image/red_isaac.png')
+            self.red = True
+            self.pick = False
 
 
     def draw(self):
@@ -204,8 +207,8 @@ class Isaac:
                 tear = Tear(self.x, self.y, self.dir_x, 0)
 
             game_world.add_object(tear, 1)
-            game_world.add_collision_group(tear, stage0_state.monster1, 'tear:monster1')
-            game_world.add_collision_group(tear, stage0_state.monster2, 'tear:monster2')
+            game_world.add_collision_group(tear, stage1_state.monster1, 'tear:monster1')
+            game_world.add_collision_group(tear, stage1_state.monster2, 'tear:monster2')
         if self.change == True:
             if self.dir_x == 0 and self.dir_y == 0:
                 redtear = RedTear(self.x, self.y, self.frame, self.frame)
@@ -217,8 +220,8 @@ class Isaac:
                 redtear = RedTear(self.x, self.y, self.frame, 0)
 
             game_world.add_object(redtear, 1)
-            game_world.add_collision_group(redtear, stage0_state.monster1, 'redtear:monster1')
-            game_world.add_collision_group(redtear, stage0_state.monster2, 'redtear:monster2')
+            game_world.add_collision_group(redtear, stage1_state.monster1, 'redtear:monster1')
+            game_world.add_collision_group(redtear, stage1_state.monster2, 'redtear:monster2')
 
     def get_bb(self):
         return self.x - 20, self.y - 30, self.x + 25, self.y + 30
