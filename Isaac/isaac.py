@@ -1,7 +1,9 @@
 from pico2d import *
 from tear import Tear
+from redtear import RedTear
 import game_world
 import game_framework
+import time
 
 from life import Life
 import Stage.stage0_state as stage0_state
@@ -141,6 +143,12 @@ class Isaac:
         self.face_dirx = 0
         self.face_diry = 0
         self.life = 3
+        self.change = False
+
+        self.time = 0
+        self.cur_time = 0
+        self.timer = 0
+
         self.image = load_image('Image/animation.png')
         self.isaac_image = load_image('Image/isaac.png')
         self.isaac_attack_image = load_image('Image/attack isaac.png')
@@ -153,7 +161,8 @@ class Isaac:
 
     def update(self):
         self.cur_state.do(self)
-
+        self.cur_time = time.time()
+        self.timer = self.cur_time - self.time
         if self.event_que:
             event = self.event_que.pop()
             self.cur_state.exit(self, event)
@@ -163,11 +172,17 @@ class Isaac:
                 print('error:', self.cur_state.__name__, ' ', event_name[event])
 
             self.cur_state.enter(self, event)
+        if self.timer < 1:
+            self.isaac_image = load_image('Image/pick_item.png')
+        elif self.timer > 1000:
+            self.isaac_image = load_image('Image/isaac.png')
+        else:
+            self.isaac_image = load_image('Image/red_isaac.png')
 
 
     def draw(self):
         self.cur_state.draw(self)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -178,21 +193,35 @@ class Isaac:
             self.add_event(key_event)
 
     def attack(self):
-        if self.dir_x == 0 and self.dir_y == 0:
-            tear = Tear(self.x, self.y, self.face_dirx, self.face_diry)
-        elif self.dir_y == 0:
-            tear = Tear(self.x, self.y, self.dir_x, 0)
-        elif self.dir_x == 0:
-            tear = Tear(self.x, self.y, 0, self.dir_y)
-        else:
-            tear = Tear(self.x, self.y, self.dir_x, 0)
+        if self.change == False:
+            if self.dir_x == 0 and self.dir_y == 0:
+                tear = Tear(self.x, self.y, self.face_dirx, self.face_diry)
+            elif self.dir_y == 0:
+                tear = Tear(self.x, self.y, self.dir_x, 0)
+            elif self.dir_x == 0:
+                tear = Tear(self.x, self.y, 0, self.dir_y)
+            else:
+                tear = Tear(self.x, self.y, self.dir_x, 0)
 
-        game_world.add_object(tear, 1)
-        game_world.add_collision_group(tear, stage0_state.monster1, 'tear:monster1')
-        game_world.add_collision_group(tear, stage0_state.monster2, 'tear:monster2')
+            game_world.add_object(tear, 1)
+            game_world.add_collision_group(tear, stage0_state.monster1, 'tear:monster1')
+            game_world.add_collision_group(tear, stage0_state.monster2, 'tear:monster2')
+        if self.change == True:
+            if self.dir_x == 0 and self.dir_y == 0:
+                redtear = RedTear(self.x, self.y, self.frame, self.frame)
+            elif self.dir_y == 0:
+                redtear = RedTear(self.x, self.y, self.frame, 0)
+            elif self.dir_x == 0:
+                redtear = RedTear(self.x, self.y, 0, self.frame)
+            else:
+                redtear = RedTear(self.x, self.y, self.frame, 0)
+
+            game_world.add_object(redtear, 1)
+            game_world.add_collision_group(redtear, stage0_state.monster1, 'redtear:monster1')
+            game_world.add_collision_group(redtear, stage0_state.monster2, 'redtear:monster2')
 
     def get_bb(self):
-        return self.x - 20, self.y - 30, self.x + 25, self.y + 25
+        return self.x - 20, self.y - 30, self.x + 25, self.y + 30
 
     def handle_collision(self, other, group):
         if group == 'isaac:monster1':
@@ -209,3 +238,7 @@ class Isaac:
             elif self.life == 2:
                 Life.image = load_image('Image/life1.png')
                 self.life = 1
+        if group == 'isaac:item':
+            self.time = time.time()
+            self.image = load_image('Image/red_animation.png')
+            self.change = True
