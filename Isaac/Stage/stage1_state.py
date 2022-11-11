@@ -7,12 +7,13 @@ from isaac import NULL, RD, LD, RU, LU, WD, SD, WU, SU, SPACE
 from monster1 import Monster_1
 from monster2 import Monster_2
 from life import Life
+from isaac import Isaac
 
 isaac = None
 stage = None
 monster1 = None
 monster2 = None
-life = []
+life = None
 item = None
 
 class Stage:
@@ -35,22 +36,19 @@ def handle_events():
 
 def enter():
     global isaac, stage, monster1, monster2, life
-    isaac = stage0_state.isaac
-    isaac.x, isaac.y = 680, 255
+    isaac = Isaac(680, 255)
     stage = Stage()
-    life = [Life() for i in range(3)]
+    life = Life()
+    game_world.add_object(life, 1)
     monster1 = Monster_1()
     monster2 = Monster_2()
     game_world.add_object(monster1, 1)
     game_world.add_object(monster2, 1)
-    game_world.add_objects(life, 1)
-
+    game_world.add_object(isaac, 1)
 
     game_world.add_collision_group(isaac, monster1, 'isaac:monster1')
     game_world.add_collision_group(isaac, monster2, 'isaac:monster2')
 
-
-    pass
 
 # 게임 종료 - 객체를 소멸
 def exit():
@@ -84,9 +82,11 @@ def draw():
     update_canvas()
 
 def pause():
+    game_world.remove_object(isaac)
     pass
 
 def resume():
+    game_world.add_object(isaac, 1)
     pass
 
 def collide(a, b):

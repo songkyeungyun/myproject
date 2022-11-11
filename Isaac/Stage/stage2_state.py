@@ -11,7 +11,7 @@ from item import Item
 isaac = None
 stage = None
 item = None
-life = []
+life = None
 
 class Stage:
     def __init__(self):
@@ -32,13 +32,13 @@ def handle_events():
 
 def enter():
     global isaac, stage, life, item
-    isaac = stage0_state.isaac
-    isaac.x, isaac.y = 400, 120
+    isaac = Isaac(400, 120)
     stage = Stage()
     item = Item()
-    life = [Life() for i in range(3)]
-    game_world.add_objects(life, 1)
+    life = Life()
+    game_world.add_object(life, 1)
     game_world.add_object(item, 1)
+    game_world.add_object(isaac, 1)
     game_world.add_collision_group(isaac, item, 'isaac:item')
 
     pass
@@ -59,7 +59,7 @@ def update():
     if isaac.y <= 80 and 380 <= isaac.x <= 420:
         isaac.dir_x = 0
         isaac.dir_y = 0
-        game_framework.pop_state()
+        game_framework.change_state(stage0_state)
     delay(0.02)
 
 

@@ -7,15 +7,11 @@ import game_world
 
 
 from isaac import Isaac
-from monster1 import Monster_1
-from monster2 import Monster_2
 from life import Life
 
 isaac = None
 stage = None
-monster1 = None
-monster2 = None
-life = []
+life = None
 
 class Stage:
     def __init__(self):
@@ -37,21 +33,13 @@ def handle_events():
 
 import Stage.stage4_state as stage4_state
 def enter():
-    global isaac, stage, monster1, monster2, life
+    global isaac, stage, life
     isaac = Isaac(400, 250)
     stage = Stage()
-    life = [Life() for i in range(3)]
-    monster1 = Monster_1()
-    monster2 = Monster_2()
+    life = Life()
     game_world.add_object(isaac, 1)
-    game_world.add_object(monster1, 1)
-    game_world.add_object(monster2, 1)
-    game_world.add_objects(life, 1)
+    game_world.add_object(life, 1)
 
-    game_world.add_collision_group(isaac, monster1, 'isaac:monster1')
-    game_world.add_collision_group(isaac, monster2, 'isaac:monster2')
-
-    pass
 
 # 게임 종료 - 객체를 소멸
 def exit():
@@ -68,18 +56,22 @@ def update():
             a.handle_collision(b, group)
             b.handle_collision(a, group)
     if isaac.x <= 70 and 245 <= isaac.y <= 285:
-        isaac.x = 120
+        isaac.x =120
         game_framework.push_state(stage1_state)
     elif isaac.y >= 420 and 380 <= isaac.x <= 420:
         isaac.dir_x = 0
         isaac.dir_y = 0
         isaac.y = 400
-        game_framework.push_state(stage2_state)
+        game_framework.change_state(stage2_state)
     elif isaac.y <= 80 and 380 <= isaac.x <= 420:
         isaac.dir_x = 0
         isaac.dir_y = 0
         isaac.y = 120
         game_framework.push_state(stage3_state)
+    elif isaac.x >= 700 and 245 <= isaac.y <= 285:
+        stage.image = load_image('Image/stage0.png')
+        isaac.x = 110
+        isaac.y = 255
 
 
 
@@ -95,9 +87,11 @@ def draw():
     update_canvas()
 
 def pause():
+    game_world.remove_object(isaac)
     pass
 
 def resume():
+    game_world.add_object(isaac, 1)
     pass
 
 def collide(a, b):
