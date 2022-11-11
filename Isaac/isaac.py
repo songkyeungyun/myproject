@@ -3,9 +3,11 @@ from tear import Tear
 import game_world
 import game_framework
 
+from life import Life
+import Stage.stage0_state as stage0_state
 
-RD, LD, RU, LU, WD, SD, WU, SU, SPACE = range(9)
-event_name = ['RD', 'LD', 'RU', 'LU', 'SPACE', 'WD', 'SD', 'WU', 'SU']
+NULL, RD, LD, RU, LU, WD, SD, WU, SU, SPACE = range(10)
+event_name = ['Null','RD', 'LD', 'RU', 'LU', 'SPACE', 'WD', 'SD', 'WU', 'SU']
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_SPACE): SPACE,
@@ -48,28 +50,39 @@ class IDLE:
 class RUN:
     def enter(self, event):
         if event == RD:
-            self.dir_x += 1
+            self.key[1] = True
+            self.dir_x = 1
         if event == LD:
-            self.dir_x -= 1
+            self.key[0] = True
+            self.dir_x = -1
         if event == RU:
-            self.dir_x -= 1
+            self.key[1] = False
         if event == LU:
-            self.dir_x += 1
+            self.key[0] = False
 
         if event == WD:
-            self.dir_y += 1
+            self.key[3] = True
+            self.dir_y = 1
         if event == SD:
-            self.dir_y -= 1
+            self.key[2] = True
+            self.dir_y = -1
         if event == WU:
-            self.dir_y -= 1
+            self.dir_y = 0
+            self.key[3] = False
         if event == SU:
-            self.dir_y += 1
+            self.dir_y = 0
+            self.key[2] = False
 
-    def exit(self, event):
+        for key in self.key:
+            if key is True: return
+
         if self.dir_x == 0:
             self.face_diry = self.dir_y
         elif self.dir_y == 0:
             self.face_dirx = self.dir_x
+        self.add_event(NULL)
+
+    def exit(self, event):
         if SPACE == event:
             self.attack()
 
@@ -99,27 +112,40 @@ class RUN:
 
 
 next_state = {
-    IDLE: {RU: RUN, LU: RUN, RD: RUN, LD: RUN, WU: RUN, SU: RUN, WD: RUN, SD: RUN, SPACE: IDLE},
-    RUN: {RU: RUN, LU: RUN, RD: RUN, LD: RUN, WU: RUN, SU: RUN, WD: RUN, SD: RUN, SPACE: RUN},
+    IDLE: {RU: RUN, RD: RUN,
+           LU: RUN, LD: RUN,
+           WU: RUN, WD: RUN,
+           SU: RUN, SD: RUN,
+           NULL: IDLE, SPACE: IDLE},
+    RUN: {RU: RUN, RD: RUN,
+           LU: RUN, LD: RUN,
+           WU: RUN, WD: RUN,
+           SU: RUN, SD: RUN,
+           NULL: IDLE, SPACE: RUN},
 }
 
 PIXEL_PER_METER = 10.0 / 0.3
-RUN_SPEED_KPH = 25
+RUN_SPEED_KPH = 20
 RUN_SPEED_MPM = RUN_SPEED_KPH * 1000.0 / 60.0
 RUN_SPEED_MPS = RUN_SPEED_MPM / 60.0
 RUN_SPEED_PPS = RUN_SPEED_MPS * PIXEL_PER_METER
 
+
 class Isaac:
-    def __init__(self):
-        self.x = 400
-        self.y = 255
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
         self.frame = 0
         self.dir_x = 0
         self.dir_y = 0
         self.face_dirx = 0
         self.face_diry = 0
+        self.life = 3
         self.image = load_image('Image/animation.png')
         self.isaac_image = load_image('Image/isaac.png')
+        self.isaac_attack_image = load_image('Image/attack isaac.png')
+
+        self.key = [False,False,False,False] # 0=left 1=right 2=down 3=up
 
         self.event_que = []
         self.cur_state = IDLE
@@ -138,8 +164,10 @@ class Isaac:
 
             self.cur_state.enter(self, event)
 
+
     def draw(self):
         self.cur_state.draw(self)
+        draw_rectangle(*self.get_bb())
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -150,10 +178,34 @@ class Isaac:
             self.add_event(key_event)
 
     def attack(self):
-        if self.dir_x == 0 and self.dir_y ==0:
-            tear = Tear(self.x, self.y, self.face_dirx * 3, self.face_diry * 3)
+        if self.dir_x == 0 and self.dir_y == 0:
+            tear = Tear(self.x, self.y, self.face_dirx, self.face_diry)
         elif self.dir_y == 0:
-            tear = Tear(self.x, self.y, self.dir_x * 3, 0)
+            tear = Tear(self.x, self.y, self.dir_x, 0)
         elif self.dir_x == 0:
-            tear = Tear(self.x, self.y, 0, self.dir_y * 3)
+            tear = Tear(self.x, self.y, 0, self.dir_y)
+        else:
+            tear = Tear(self.x, self.y, self.dir_x, 0)
+
         game_world.add_object(tear, 1)
+        game_world.add_collision_group(tear, stage0_state.monster1, 'tear:monster1')
+        game_world.add_collision_group(tear, stage0_state.monster2, 'tear:monster2')
+
+    def get_bb(self):
+        return self.x - 20, self.y - 30, self.x + 25, self.y + 25
+
+    def handle_collision(self, other, group):
+        if group == 'isaac:monster1':
+            if self.life == 3:
+                Life.image = load_image('Image/life2.png')
+                self.life = 2
+            elif self.life == 2:
+                Life.image = load_image('Image/life1.png')
+                self.life = 1
+        if group == 'isaac:monster2':
+            if self.life == 3:
+                Life.image = load_image('Image/life2.png')
+                self.life = 2
+            elif self.life == 2:
+                Life.image = load_image('Image/life1.png')
+                self.life = 1

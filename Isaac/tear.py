@@ -1,6 +1,7 @@
 from pico2d import *
 
 import game_world
+import monster1
 
 class Tear:
     image = None
@@ -12,9 +13,19 @@ class Tear:
 
     def draw(self):
         self.image.draw(self.x, self.y)
+        draw_rectangle(*self.get_bb())
 
     def update(self):
         self.x += self.velocity
         self.y += self.v
-        if self.x < 100 or self.x > 700 or self.y < 100 or self.y > 400 :
+        if self.x < 100 or self.x > 700 or self.y < 100 or self.y > 400:
+            game_world.remove_object(self)
+
+    def get_bb(self):
+        return self.x - 10, self.y - 10, self.x + 10, self.y + 10
+
+    def handle_collision(self, other, group):
+        if group == 'tear:monster1':
+            game_world.remove_object(self)
+        if group == 'tear:monster2':
             game_world.remove_object(self)
