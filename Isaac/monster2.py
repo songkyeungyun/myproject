@@ -7,15 +7,15 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 6
 
 PIXEL_PER_METER = 10.0 / 0.3
-RUN_SPEED_KPH = 20
+RUN_SPEED_KPH = 15
 RUN_SPEED_MPM = RUN_SPEED_KPH * 1000.0 / 60.0
 RUN_SPEED_MPS = RUN_SPEED_MPM / 60.0
 RUN_SPEED_PPS = RUN_SPEED_MPS * PIXEL_PER_METER
 
 class Monster_2():
     def __init__(self):
-        self.x = 700
-        self.y = 350
+        self.x = 0
+        self.y = 0
         self.frame = 0
         self.dir = -1
         self.image = load_image('Image/monster1 animation.png')
@@ -27,9 +27,9 @@ class Monster_2():
         if self.x > 700:
             self.dir = -1
             self.x = 700
-        elif self.x < 400:
+        elif self.x < 100:
             self.dir = 1
-            self.x = 400
+            self.x = 100
 
     def draw(self):
         if self.dir == 1:

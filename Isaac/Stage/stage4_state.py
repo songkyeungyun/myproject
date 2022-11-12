@@ -1,6 +1,7 @@
 from pico2d import *
 import game_framework
-import Stage.stage5_state as stage5_state
+import title_state
+import Stage.stage0_state as stage0_state
 
 isaac = None
 stage = None
@@ -29,15 +30,13 @@ class Isaac:
         self.frame = (self.frame + 1) % 8
         self.x += self.dir_x*5
         self.y += self.dir_y*5
+        if self.x > 700:
+            self.x = 700
         if 245 <= self.y <= 285:
             if self.x < 70:
                 self.x = 70
-            elif self.x > 730:
-                self.x = 730
         elif self.x < 100:
             self.x = 100
-        elif self.x > 700:
-            self.x = 700
         if self.y > 400:
             self.y = 400
         if self.y < 100:
@@ -108,12 +107,7 @@ def exit():
 # 게임 월드 객체를 업데이트 - 게임 로직
 def update():
     isaac.update()
-    if isaac.x >= 730 and 245 <= isaac.y <= 285:
-        isaac.dir_x = 0
-        isaac.dir_y = 0
-        isaac.x = 720
-        game_framework.push_state(stage5_state)
-    elif isaac.x <= 70 and 245 <= isaac.y <= 285:
+    if isaac.x <= 70 and 245 <= isaac.y <= 285:
         isaac.dir_x = 0
         isaac.dir_y = 0
         game_framework.pop_state()

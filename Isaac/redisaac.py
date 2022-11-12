@@ -1,11 +1,10 @@
 from pico2d import *
-from tear import Tear
+from redtear import RedTear
 import game_world
 import game_framework
 import time
 import gameover
 
-from redtear import RedTear
 from life import Life
 import Stage.stage1_state as stage1_state
 # import Stage.stage3_state as stage3_state
@@ -135,7 +134,7 @@ RUN_SPEED_MPS = RUN_SPEED_MPM / 60.0
 RUN_SPEED_PPS = RUN_SPEED_MPS * PIXEL_PER_METER
 
 
-class Isaac:
+class RedIsaac:
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -145,13 +144,14 @@ class Isaac:
         self.face_dirx = 0
         self.face_diry = 0
         self.life = 3
-        self.change = 1
-        self.image = load_image('Image/animation.png')
-        self.isaac_image = load_image('Image/isaac.png')
-
+        self.image = load_image('Image/red_animation.png')
+        self.isaac_image = load_image('Image/red_isaac.png')
         self.time = 0
         self.cur_time = 0
         self.timer = 0
+
+        self.pick = False
+        self.red = False
         self.key = [False, False, False, False]# 0=left 1=right 2=down 3=up
 
         self.event_que = []
@@ -171,6 +171,12 @@ class Isaac:
                 print('error:', self.cur_state.__name__, ' ', event_name[event])
 
             self.cur_state.enter(self, event)
+        if self.timer < 1:
+            self.pick = True
+        else:
+            self.red = True
+            self.pick = False
+
     def draw(self):
         self.cur_state.draw(self)
         # draw_rectangle(*self.get_bb())
@@ -184,39 +190,25 @@ class Isaac:
             self.add_event(key_event)
 
     def attack(self):
-        if self.change == 1:
-            if self.dir_x == 0 and self.dir_y == 0:
-                tear = Tear(self.x, self.y, self.face_dirx, self.face_diry)
-            elif self.dir_y == 0:
-                tear = Tear(self.x, self.y, self.dir_x, 0)
-            elif self.dir_x == 0:
-                tear = Tear(self.x, self.y, 0, self.dir_y)
-            else:
-                tear = Tear(self.x, self.y, self.dir_x, 0)
+        self.image = load_image('Image/red_animation.png')
+        if self.dir_x == 0 and self.dir_y == 0:
+            redtear = RedTear(self.x, self.y, self.face_dirx, self.face_diry)
+        elif self.dir_y == 0:
+            redtear = RedTear(self.x, self.y, self.dir_x, 0)
+        elif self.dir_x == 0:
+            redtear = RedTear(self.x, self.y, 0, self.dir_y)
+        else:
+            redtear = RedTear(self.x, self.y, self.dir_x, 0)
 
-            game_world.add_object(tear, 1)
-            # game_world.add_collision_group(tear, stage3_state.monster1, 'tear:monster1')
-            game_world.add_collision_group(tear, stage1_state.monster2, 'tear:monster2')
-        elif self.change == 3:
-            self.image = load_image('Image/red_animation.png')
-            self.isaac_image = load_image('Image/red_isaac.png')
-            if self.dir_x == 0 and self.dir_y == 0:
-                redtear = RedTear(self.x, self.y, self.face_dirx, self.face_diry)
-            elif self.dir_y == 0:
-                redtear = RedTear(self.x, self.y, self.dir_x, 0)
-            elif self.dir_x == 0:
-                redtear = RedTear(self.x, self.y, 0, self.dir_y)
-            else:
-                redtear = RedTear(self.x, self.y, self.dir_x, 0)
+        game_world.add_object(redtear, 1)
+        # game_world.add_collision_group(redtear, stage3_state.monster1, 'redtear:monster1')
+        game_world.add_collision_group(redtear, stage1_state.monster2, 'redtear:monster2')
 
-            game_world.add_object(redtear, 1)
-            # game_world.add_collision_group(redtear, stage3_state.monster1, 'redtear:monster1')
-            game_world.add_collision_group(redtear, stage1_state.monster2, 'redtear:monster2')
     def get_bb(self):
         return self.x - 20, self.y - 30, self.x + 25, self.y + 30
 
     def handle_collision(self, other, group):
-        if group == 'isaac:monster1':
+        if group == 'redisaac:monster1':
             if self.life == 3:
                 Life.image = load_image('Image/life2.png')
                 self.life = 2
@@ -225,7 +217,7 @@ class Isaac:
                 self.life = 1
             elif self.life == 1:
                 game_framework.change_state(gameover)
-        if group == 'isaac:monster2':
+        if group == 'redisaac:monster2':
             if self.life == 3:
                 Life.image = load_image('Image/life2.png')
                 self.life = 2
@@ -234,5 +226,3 @@ class Isaac:
                 self.life = 1
             elif self.life == 1:
                 game_framework.change_state(gameover)
-        if group == 'isaac:item':
-            self.change = 2

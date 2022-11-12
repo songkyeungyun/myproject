@@ -3,18 +3,15 @@ import game_framework
 import Stage.stage0_state as stage0_state
 import game_world
 
-from isaac import NULL, RD, LD, RU, LU, WD, SD, WU, SU, SPACE
-from monster1 import Monster_1
+
 from monster2 import Monster_2
 from life import Life
 from isaac import Isaac
 
 isaac = None
 stage = None
-monster1 = None
-monster2 = None
+monster2 = []
 life = None
-item = None
 
 class Stage:
     def __init__(self):
@@ -35,18 +32,18 @@ def handle_events():
 
 
 def enter():
-    global isaac, stage, monster1, monster2, life
+    global isaac, stage, monster2, life
     isaac = Isaac(680, 255)
     stage = Stage()
     life = Life()
     game_world.add_object(life, 1)
-    monster1 = Monster_1()
-    monster2 = Monster_2()
-    game_world.add_object(monster1, 1)
-    game_world.add_object(monster2, 1)
+    monster2 = [Monster_2() for i in range(4)]
     game_world.add_object(isaac, 1)
-
-    game_world.add_collision_group(isaac, monster1, 'isaac:monster1')
+    monster2[0].y, monster2[0].x = 400, 700
+    monster2[1].y, monster2[1].x = 100, 100
+    monster2[2].y, monster2[2].x = 400, 100
+    monster2[3].y, monster2[3].x = 100, 700
+    game_world.add_objects(monster2, 1)
     game_world.add_collision_group(isaac, monster2, 'isaac:monster2')
 
 
@@ -83,6 +80,8 @@ def draw():
 
 def pause():
     game_world.remove_object(isaac)
+    game_world.remove_object(monster2)
+
     pass
 
 def resume():

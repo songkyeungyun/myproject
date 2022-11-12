@@ -6,14 +6,12 @@ import game_world
 
 from isaac import Isaac
 from monster1 import Monster_1
-from monster2 import Monster_2
 from life import Life
 
 isaac = None
 stage = None
-monster1 = None
-monster2 = None
-life = []
+monster1 = []
+life = None
 
 class Stage:
     def __init__(self):
@@ -33,21 +31,25 @@ def handle_events():
             isaac.handle_event(event)
 
 def enter():
-    global isaac, stage, monster1, monster2, life
+    global isaac, stage, monster1, life
     isaac = Isaac(400, 380)
     stage = Stage()
-    life = [Life() for i in range(3)]
-    monster1 = Monster_1()
-    monster2 = Monster_2()
+    isaac.change = 3
+    life = Life()
+    monster1 = [Monster_1() for i in range(4)]
     game_world.add_object(isaac, 1)
-    game_world.add_object(monster1, 1)
-    game_world.add_object(monster2, 1)
-    game_world.add_objects(life, 1)
-
+    game_world.add_object(life, 1)
+    monster1[0].y, monster1[0].x = 400, 700
+    monster1[1].y, monster1[1].x = 100, 100
+    monster1[2].y, monster1[2].x = 400, 100
+    monster1[3].y, monster1[3].x = 100, 700
+    game_world.add_objects(monster1, 1)
     game_world.add_collision_group(isaac, monster1, 'isaac:monster1')
-    game_world.add_collision_group(isaac, monster2, 'isaac:monster2')
+    if isaac.change == 3:
+        isaac.image = load_image('Image/red_animation.png')
+        isaac.isaac_image = load_image('Image/red_isaac.png')
 
-    pass
+
 
 # 게임 종료 - 객체를 소멸
 def exit():
@@ -63,7 +65,7 @@ def update():
             print('collision by', group)
             a.handle_collision(b, group)
             b.handle_collision(a, group)
-    if isaac.y >= 430 and 380 <= isaac.x <= 420:
+    if isaac.y >= 420 and 380 <= isaac.x <= 420:
         isaac.dir_x = 0
         isaac.dir_y = 0
         game_framework.pop_state()
@@ -72,7 +74,6 @@ def update():
         isaac.dir_y = 0
         isaac.x = 720
         game_framework.push_state(stage4_state)
-    delay(0.02)
 
 
 def draw_world():

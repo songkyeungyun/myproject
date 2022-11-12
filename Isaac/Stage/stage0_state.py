@@ -31,7 +31,6 @@ def handle_events():
         else:
             isaac.handle_event(event)
 
-import Stage.stage4_state as stage4_state
 def enter():
     global isaac, stage, life
     isaac = Isaac(400, 250)
@@ -49,29 +48,21 @@ def exit():
 def update():
     for game_object in game_world.all_objects():
         game_object.update()
-
-    for a, b, group in game_world.all_collision_pairs():
-        if collide(a, b):
-            print('collision by', group)
-            a.handle_collision(b, group)
-            b.handle_collision(a, group)
     if isaac.x <= 70 and 245 <= isaac.y <= 285:
+        isaac.dir_x = 0
+        isaac.dir_y = 0
         isaac.x =120
         game_framework.push_state(stage1_state)
     elif isaac.y >= 420 and 380 <= isaac.x <= 420:
         isaac.dir_x = 0
         isaac.dir_y = 0
-        isaac.y = 400
-        game_framework.change_state(stage2_state)
+        isaac.y = 380
+        game_framework.push_state(stage2_state)
     elif isaac.y <= 80 and 380 <= isaac.x <= 420:
         isaac.dir_x = 0
         isaac.dir_y = 0
         isaac.y = 120
         game_framework.push_state(stage3_state)
-    elif isaac.x >= 700 and 245 <= isaac.y <= 285:
-        stage.image = load_image('Image/stage0.png')
-        isaac.x = 110
-        isaac.y = 255
 
 
 
@@ -91,7 +82,12 @@ def pause():
     pass
 
 def resume():
+    if isaac.y > 300:
+        isaac.change = 3
+        isaac.image = load_image('Image/red_animation.png')
+        isaac.isaac_image = load_image('Image/red_isaac.png')
     game_world.add_object(isaac, 1)
+    game_world.add_object(life, 1)
     pass
 
 def collide(a, b):

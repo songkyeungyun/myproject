@@ -1,7 +1,6 @@
 from pico2d import *
 import game_framework
 import game_world
-import random
 
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
@@ -16,8 +15,8 @@ RUN_SPEED_PPS = RUN_SPEED_MPS * PIXEL_PER_METER
 import monster2
 class Monster_1():
     def __init__(self):
-        self.x = 100
-        self.y = random.randint(100, 300)
+        self.x = 0
+        self.y = 0
         self.frame = 0
         self.dir = 1
         self.image = load_image('Image/monster2 animation.png')
@@ -26,9 +25,9 @@ class Monster_1():
     def update(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
         self.x += self.dir * RUN_SPEED_PPS * game_framework.frame_time
-        if self.x > 400:
+        if self.x > 700:
             self.dir = -1
-            self.x = 400
+            self.x = 700
         elif self.x < 100:
             self.dir = 1
             self.x = 100
