@@ -21,7 +21,7 @@ def update():
         logo_time = 0
         game_framework.change_state(title_state)
     delay(0.01)
-    logo_time += 0.02
+    logo_time += 0.01
 
     # 게임 월드 렌더링
 def draw():

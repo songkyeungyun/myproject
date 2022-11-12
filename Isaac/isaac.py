@@ -186,13 +186,13 @@ class Isaac:
     def attack(self):
         if self.change == 1:
             if self.dir_x == 0 and self.dir_y == 0:
-                tear = Tear(self.x, self.y, self.face_dirx, self.face_diry)
+                tear = Tear(self.x, self.y, self.face_dirx*0.8, self.face_diry*0.8)
             elif self.dir_y == 0:
-                tear = Tear(self.x, self.y, self.dir_x, 0)
+                tear = Tear(self.x, self.y, self.dir_x*0.8, 0)
             elif self.dir_x == 0:
-                tear = Tear(self.x, self.y, 0, self.dir_y)
+                tear = Tear(self.x, self.y, 0, self.dir_y*0.8)
             else:
-                tear = Tear(self.x, self.y, self.dir_x, 0)
+                tear = Tear(self.x, self.y, self.dir_x*0.8, 0)
 
             game_world.add_object(tear, 1)
             # game_world.add_collision_group(tear, stage3_state.monster1, 'tear:monster1')
@@ -201,13 +201,13 @@ class Isaac:
             self.image = load_image('Image/red_animation.png')
             self.isaac_image = load_image('Image/red_isaac.png')
             if self.dir_x == 0 and self.dir_y == 0:
-                redtear = RedTear(self.x, self.y, self.face_dirx, self.face_diry)
+                redtear = RedTear(self.x, self.y, self.face_dirx*1.2, self.face_diry*1.2)
             elif self.dir_y == 0:
-                redtear = RedTear(self.x, self.y, self.dir_x, 0)
+                redtear = RedTear(self.x, self.y, self.dir_x*1.2, 0)
             elif self.dir_x == 0:
-                redtear = RedTear(self.x, self.y, 0, self.dir_y)
+                redtear = RedTear(self.x, self.y, 0, self.dir_y*1.2)
             else:
-                redtear = RedTear(self.x, self.y, self.dir_x, 0)
+                redtear = RedTear(self.x, self.y, self.dir_x*1.2, 0)
 
             game_world.add_object(redtear, 1)
             # game_world.add_collision_group(redtear, stage3_state.monster1, 'redtear:monster1')

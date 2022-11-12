@@ -47,7 +47,6 @@ class Monster_1():
         if group == 'isaac:monster1':
             self.dir = self.dir * -1
         if group == 'tear:monster1':
-            print('Monster_01')
             if self.life == 3:
                 self.life = 2
             elif self.life == 2:

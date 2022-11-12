@@ -52,7 +52,6 @@ def update():
         game_object.update()
     for a, b, group in game_world.all_collision_pairs():
         if collide(a, b):
-            print('collision by', group)
             a.handle_collision(b, group)
             b.handle_collision(a, group)
     if isaac.y <= 80 and 380 <= isaac.x <= 420:
