@@ -19,7 +19,7 @@ class Monster_2():
         self.frame = 0
         self.dir = -1
         self.image = load_image('Image/monster1 animation.png')
-        self.life = 3
+        self.life = 1
 
     def update(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
@@ -36,7 +36,7 @@ class Monster_2():
             self.image.clip_draw(int(self.frame) * 30, 30, 25, 60, self.x, self.y, 45, 60)
         else:
             self.image.clip_composite_draw(int(self.frame) * 30, 30, 25, 60, 3.141592, 'v', self.x, self.y, 45, 60)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         return self.x - 10, self.y - 20, self.x + 10, self.y + 10

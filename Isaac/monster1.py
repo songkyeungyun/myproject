@@ -37,7 +37,7 @@ class Monster_1():
             self.image.clip_draw(int(self.frame) * 33, 30, 25, 35, self.x, self.y, 35, 35)
         else:
             self.image.clip_composite_draw(int(self.frame) * 33, 30, 25, 35, 3.141592, 'v', self.x, self.y, 35, 35)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         return self.x - 10, self.y - 10, self.x + 10, self.y + 10

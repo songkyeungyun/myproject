@@ -62,7 +62,6 @@ def update():
 
     for a, b, group in game_world.all_collision_pairs():
         if collide(a, b):
-            print('collision by', group)
             a.handle_collision(b, group)
             b.handle_collision(a, group)
     if isaac.y >= 420 and 380 <= isaac.x <= 420:
@@ -88,9 +87,11 @@ def draw():
     update_canvas()
 
 def pause():
+    game_world.remove_object(isaac)
     pass
 
 def resume():
+    game_world.add_object(isaac, 1)
     pass
 
 def collide(a, b):

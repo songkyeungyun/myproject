@@ -1,11 +1,15 @@
 from pico2d import *
 import game_framework
-import title_state
 import Stage.stage0_state as stage0_state
+import game_world
+import pick_item
+
+from isaac import Isaac
+from life import Life
 
 isaac = None
 stage = None
-running = True
+life = None
 
 class Stage:
     def __init__(self):
@@ -14,116 +18,49 @@ class Stage:
     def draw(self):
         self.image.draw(400, 300)
 
-class Isaac:
-    def __init__(self):
-        self.x = 110
-        self.y = 255
-        self.frame = 0
-        self.dir_x = 0
-        self.dir_y = 0
-        self.image = load_image('Image/animation.png')
-        self.isaac_image = load_image('Image/isaac.png')
-        self.tear_image = load_image('Image/tear.png')
-        self.item = None
-
-    def update(self):
-        self.frame = (self.frame + 1) % 8
-        self.x += self.dir_x*5
-        self.y += self.dir_y*5
-        if self.x > 700:
-            self.x = 700
-        if 245 <= self.y <= 285:
-            if self.x < 70:
-                self.x = 70
-        elif self.x < 100:
-            self.x = 100
-        if self.y > 400:
-            self.y = 400
-        if self.y < 100:
-            self.y = 100
-
-    def draw(self):
-        if self.dir_x == 1:
-            self.image.clip_draw(self.frame * 49, 0, 45, 80, self.x, self.y)
-        elif self.dir_x == -1:
-            self.image.clip_composite_draw(self.frame * 50, 0, 45, 80, 3.141592, 'v', self.x, self.y, 45, 80)
-        elif self.dir_y == -1 or self.dir_y == 1:
-            self.image.clip_draw(self.frame * 49, 90, 50, 80, self.x, self.y)
-        elif self.dir_x == 0:
-            self.isaac_image.draw(self.x, self.y - 10)
-        if self.item == 'tear':
-            self.tear_image.draw(self.x + 50, self.y)
 def handle_events():
-    global running
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
-        if event.type == SDL_KEYDOWN:
-            if event.key == SDLK_ESCAPE:
-                game_framework.quit()
-            if event.key == SDLK_SPACE:
-                isaac.item = 'tear'
-        if event.type == SDL_QUIT:
-            running = False
-        if event.type == SDL_KEYDOWN:
-            if event.key == SDLK_RIGHT:
-                isaac.dir_x = 1
-                isaac.x += isaac.dir_x
-            if event.key == SDLK_LEFT:
-                isaac.dir_x = -1
-                isaac.x += isaac.dir_x
-            if event.key == SDLK_UP:
-                isaac.dir_y += 1
-                isaac.y += isaac.dir_y
-            if event.key == SDLK_DOWN:
-                isaac.dir_y -= 1
-                isaac.y += isaac.dir_y
-            if event.key == SDLK_ESCAPE:
-                running = False
-        if event.type == SDL_KEYUP:
-            if event.key == SDLK_RIGHT:
-                isaac.dir_x = 0
-            if event.key == SDLK_LEFT:
-                isaac.dir_x = 0
-            if event.key == SDLK_UP:
-                isaac.dir_y = 0
-            if event.key == SDLK_DOWN:
-                isaac.dir_y = 0
-
+        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
+            game_framework.quit()
+        else:
+            isaac.handle_event(event)
 
 def enter():
-    global isaac, stage, running
-    isaac = Isaac()
+    global isaac, stage, life
+    isaac = Isaac(120, 255)
     stage = Stage()
-    running = True
-    pass
+    life = Life()
+    game_world.add_object(life, 1)
+    game_world.add_object(isaac, 1)
 
-# 게임 종료 - 객체를 소멸
 def exit():
-    global isaac, stage
-    del isaac, stage
+    game_world.clear()
 
-# 게임 월드 객체를 업데이트 - 게임 로직
 def update():
-    isaac.update()
-    if isaac.x <= 70 and 245 <= isaac.y <= 285:
+    for game_object in game_world.all_objects():
+        game_object.update()
+    for a, b, group in game_world.all_collision_pairs():
+        if collide(a, b):
+            a.handle_collision(b, group)
+            b.handle_collision(a, group)
+    if isaac.y <= 80 and 380 <= isaac.x <= 420:
         isaac.dir_x = 0
         isaac.dir_y = 0
         game_framework.pop_state()
-    delay(0.02)
-
 
 def draw_world():
     stage.draw()
-    isaac.draw()
+    for game_object in game_world.all_objects():
+        game_object.draw()
 
 # 게임 월드 렌더링
 def draw():
     clear_canvas()
     draw_world()
     update_canvas()
-
 def pause():
     pass
 
@@ -136,6 +73,18 @@ def test_self():
     pico2d.open_canvas()
     game_framework.run(this_module)
     pico2d.close_canvas()
+
+def collide(a, b):
+    la, ba, ra, ta = a.get_bb()
+    lb, bb, rb, tb = b.get_bb()
+
+    if la > rb: return False
+    if ra < lb: return False
+    if ta < bb: return False
+    if ba > tb: return False
+
+    return True
+
 
 
 if __name__ == '__main__':
