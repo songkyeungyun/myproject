@@ -22,7 +22,7 @@ class RedTear:
         return self.x - 10, self.y - 10, self.x + 10, self.y + 10
 
     def handle_collision(self, other, group):
-        if group == 'redtear:monster1':
+        if group == 'red_tear:monster1':
             game_world.remove_object(self)
-        if group == 'redtear:monster2':
+        if group == 'red_tear:monster2':
             game_world.remove_object(self)

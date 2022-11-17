@@ -8,10 +8,7 @@ from monster2 import Monster_2
 from life import Life
 from isaac import Isaac
 
-isaac = None
-stage = None
-monster2 = []
-life = None
+import server
 
 class Stage:
     def __init__(self):
@@ -28,23 +25,23 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
             game_framework.quit()
         else:
-            isaac.handle_event(event)
+            server.isaac.handle_event(event)
 
 
 def enter():
-    global isaac, stage, monster2, life
-    isaac = Isaac(680, 255)
+    global stage
+    server.isaac = Isaac(680, 255)
     stage = Stage()
-    life = Life()
-    game_world.add_object(life, 1)
-    monster2 = [Monster_2() for i in range(4)]
-    game_world.add_object(isaac, 1)
-    monster2[0].y, monster2[0].x = 400, 700
-    monster2[1].y, monster2[1].x = 100, 100
-    monster2[2].y, monster2[2].x = 400, 100
-    monster2[3].y, monster2[3].x = 100, 700
-    game_world.add_objects(monster2, 1)
-    game_world.add_collision_group(isaac, monster2, 'isaac:monster2')
+    server.life = Life()
+    game_world.add_object(server.life, 1)
+    server.monster2 = [Monster_2() for i in range(4)]
+    game_world.add_object(server.isaac, 1)
+    server.monster2[0].y, server.monster2[0].x = 400, 700
+    server.monster2[1].y, server.monster2[1].x = 100, 100
+    server.monster2[2].y, server.monster2[2].x = 400, 100
+    server.monster2[3].y, server.monster2[3].x = 100, 700
+    game_world.add_objects(server.monster2, 1)
+    game_world.add_collision_group(server.isaac, server.monster2, 'isaac:monster2')
 
 
 # 게임 종료 - 객체를 소멸
@@ -60,9 +57,9 @@ def update():
         if collide(a, b):
             a.handle_collision(b, group)
             b.handle_collision(a, group)
-    if isaac.x >= 700 and 245 <= isaac.y <= 285:
-        isaac.dir_x = 0
-        isaac.dir_y = 0
+    if server.isaac.x >= 700 and 245 <= server.isaac.y <= 285:
+        server.isaac.dir_x = 0
+        server.isaac.dir_y = 0
         game_framework.pop_state()
 
 
@@ -78,13 +75,13 @@ def draw():
     update_canvas()
 
 def pause():
-    game_world.remove_object(isaac)
-    game_world.remove_object(monster2)
+    game_world.remove_object(server.isaac)
+    game_world.remove_object(server.monster2)
 
     pass
 
 def resume():
-    game_world.add_object(isaac, 1)
+    game_world.add_object(server.isaac, 1)
     pass
 
 def collide(a, b):

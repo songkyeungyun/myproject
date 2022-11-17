@@ -4,11 +4,9 @@ import game_world
 import game_framework
 import time
 import gameover
-
-from redtear import RedTear
+import server
+from red_tear import RedTear
 from life import Life
-import Stage.stage1_state as stage1_state
-# import Stage.stage3_state as stage3_state
 
 NULL, RD, LD, RU, LU, WD, SD, WU, SU, SPACE = range(10)
 event_name = ['Null', 'RD', 'LD', 'RU', 'LU', 'SPACE', 'WD', 'SD', 'WU', 'SU']
@@ -137,8 +135,8 @@ RUN_SPEED_PPS = RUN_SPEED_MPS * PIXEL_PER_METER
 
 class Isaac:
     def __init__(self, x, y):
-        self.x = 400
-        self.y = 250
+        self.x = x
+        self.y = y
         self.frame = 0
         self.dir_x = 0
         self.dir_y = 0
@@ -195,23 +193,21 @@ class Isaac:
                 tear = Tear(self.x, self.y, self.dir_x*0.8, 0)
 
             game_world.add_object(tear, 1)
-            # game_world.add_collision_group(tear, stage3_state.monster1, 'tear:monster1')
-            game_world.add_collision_group(tear, stage1_state.monster2, 'tear:monster2')
+            game_world.add_collision_group(tear, server.monster2, 'tear:monster2')
         elif self.change == 3:
             self.image = load_image('Image/red_animation.png')
             self.isaac_image = load_image('Image/red_isaac.png')
             if self.dir_x == 0 and self.dir_y == 0:
-                redtear = RedTear(self.x, self.y, self.face_dirx*1.2, self.face_diry*1.2)
+                red_tear = RedTear(self.x, self.y, self.face_dirx*1.2, self.face_diry*1.2)
             elif self.dir_y == 0:
-                redtear = RedTear(self.x, self.y, self.dir_x*1.2, 0)
+                red_tear = RedTear(self.x, self.y, self.dir_x*1.2, 0)
             elif self.dir_x == 0:
-                redtear = RedTear(self.x, self.y, 0, self.dir_y*1.2)
+                red_tear = RedTear(self.x, self.y, 0, self.dir_y*1.2)
             else:
-                redtear = RedTear(self.x, self.y, self.dir_x*1.2, 0)
+                red_tear = RedTear(self.x, self.y, self.dir_x*1.2, 0)
 
-            game_world.add_object(redtear, 1)
-            # game_world.add_collision_group(redtear, stage3_state.monster1, 'redtear:monster1')
-            game_world.add_collision_group(redtear, stage1_state.monster2, 'redtear:monster2')
+            game_world.add_object(red_tear, 1)
+            game_world.add_collision_group(red_tear, server.monster1, 'red_tear:monster1')
     def get_bb(self):
         return self.x - 20, self.y - 30, self.x + 25, self.y + 30
 

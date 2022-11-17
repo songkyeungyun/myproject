@@ -9,7 +9,7 @@ import server
 
 # zombie Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
-RUN_SPEED_KMPH = 10.0  # Km / Hour
+RUN_SPEED_KMPH = 15.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -17,12 +17,12 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 # zombie Action Speed
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 10
+FRAMES_PER_ACTION = 4
 
-import monster2
+
 class Monster_1():
     def __init__(self):
-        self.x, self.y = 300, 250
+        self.x, self.y = 0, 0
         self.dir = random.random() * 2 * math.pi  # random moving direction
         self.speed = 0
         self.timer = 1.0  # change direction every 1 sec when wandering
@@ -34,7 +34,7 @@ class Monster_1():
 
     def find_player(self):
         distance2 = (server.isaac.x - self.x)**2 + (server.isaac.y - self.y)**2
-        if distance2 <= (PIXEL_PER_METER*10)**2:
+        if distance2 <= (PIXEL_PER_METER*30)**2:
             return BehaviorTree.SUCCESS
         else:
             self.speed = 0
@@ -66,7 +66,7 @@ class Monster_1():
         self.y = clamp(100, self.y, 400)
 
     def draw(self):
-        if math.cos(self.dir) < 0:
+        if math.cos(self.dir) >= 0:
             self.image.clip_draw(int(self.frame) * 33, 30, 25, 35, self.x, self.y, 35, 35)
         else:
             self.image.clip_composite_draw(int(self.frame) * 33, 30, 25, 35, 3.141592, 'v', self.x, self.y, 35, 35)
@@ -78,8 +78,15 @@ class Monster_1():
     def handle_collision(self, other, group):
 
         if group == 'isaac:monster1':
-            self.dir = self.dir * -1
+            math.cos(self.x) * -1
         if group == 'tear:monster1':
+            if self.life == 3:
+                self.life = 2
+            elif self.life == 2:
+                self.life = 1
+            elif self.life == 1:
+                game_world.remove_object(self)
+        if group == 'red_tear:monster1':
             if self.life == 3:
                 self.life = 2
             elif self.life == 2:

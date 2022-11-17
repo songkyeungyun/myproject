@@ -1,5 +1,5 @@
 from pico2d import *
-from redtear import RedTear
+from red_tear import RedTear
 import game_world
 import game_framework
 import time
@@ -201,8 +201,8 @@ class RedIsaac:
             redtear = RedTear(self.x, self.y, self.dir_x, 0)
 
         game_world.add_object(redtear, 1)
-        # game_world.add_collision_group(redtear, stage3_state.monster1, 'redtear:monster1')
-        game_world.add_collision_group(redtear, stage1_state.monster2, 'redtear:monster2')
+        # game_world.add_collision_group(redtear, stage3_state.monster1, 'red_tear:monster1')
+        game_world.add_collision_group(red_tear, stage1_state.monster2, 'red_tear:monster2')
 
     def get_bb(self):
         return self.x - 20, self.y - 30, self.x + 25, self.y + 30
