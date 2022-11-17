@@ -10,7 +10,7 @@ from life import Life
 
 isaac = None
 stage = None
-monster1 = []
+monster1 = None
 life = None
 
 class Stage:
@@ -36,14 +36,10 @@ def enter():
     stage = Stage()
     isaac.change = 3
     life = Life()
-    monster1 = [Monster_1() for i in range(4)]
+    monster1 = Monster_1()
     game_world.add_object(isaac, 1)
     game_world.add_object(life, 1)
-    monster1[0].y, monster1[0].x = 400, 700
-    monster1[1].y, monster1[1].x = 100, 100
-    monster1[2].y, monster1[2].x = 400, 100
-    monster1[3].y, monster1[3].x = 100, 700
-    game_world.add_objects(monster1, 1)
+    game_world.add_object(monster1, 1)
     game_world.add_collision_group(isaac, monster1, 'isaac:monster1')
     if isaac.change == 3:
         isaac.image = load_image('Image/red_animation.png')

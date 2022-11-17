@@ -137,8 +137,8 @@ RUN_SPEED_PPS = RUN_SPEED_MPS * PIXEL_PER_METER
 
 class Isaac:
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
+        self.x = 400
+        self.y = 250
         self.frame = 0
         self.dir_x = 0
         self.dir_y = 0
