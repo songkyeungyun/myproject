@@ -1,4 +1,7 @@
 isaac = None
-monster1 = None
-monster2 = None
+monster1 = []
+monster2 = []
+life = None
+tear = None
+red_tear = None
 
