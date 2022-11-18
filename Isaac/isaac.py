@@ -144,6 +144,7 @@ class Isaac:
         self.face_diry = 0
         self.life = 3
         self.change = 1
+        self.invincibility = False
         self.image = load_image('Image/animation.png')
         self.isaac_image = load_image('Image/isaac.png')
 
@@ -169,6 +170,9 @@ class Isaac:
                 print('error:', self.cur_state.__name__, ' ', event_name[event])
 
             self.cur_state.enter(self, event)
+        if 2 < self.timer:
+            self.invincibility = False
+        print(self.timer)
     def draw(self):
         self.cur_state.draw(self)
         # draw_rectangle(*self.get_bb())
@@ -212,25 +216,30 @@ class Isaac:
         return self.x - 20, self.y - 30, self.x + 25, self.y + 30
 
     def handle_collision(self, other, group):
-        if group == 'isaac:monster1':
-            print('collisiton isaac monster1')
-            if self.life == 3:
-                Life.image = load_image('Image/life2.png')
-                self.life = 2
-            elif self.life == 2:
-                Life.image = load_image('Image/life1.png')
-                self.life = 1
-            elif self.life == 1:
-                game_framework.change_state(gameover)
-        if group == 'isaac:monster2':
-            if self.life == 3:
-                Life.image = load_image('Image/life2.png')
-                self.life = 2
-            elif self.life == 2:
-                Life.image = load_image('Image/life1.png')
-                self.life = 1
-            elif self.life == 1:
-                game_framework.change_state(gameover)
+        if self.invincibility == False:
+            self.time = time.time()
+            if group == 'isaac:monster1':
+                if self.life == 3:
+                    self.invincibility = True
+                    Life.image = load_image('Image/life2.png')
+                    self.life = 2
+                elif self.life == 2:
+                    self.invincibility = True
+                    Life.image = load_image('Image/life1.png')
+                    self.life = 1
+                elif self.life == 1:
+                    game_framework.change_state(gameover)
+            if group == 'isaac:monster2':
+                if self.life == 3:
+                    self.invincibility = True
+                    Life.image = load_image('Image/life2.png')
+                    self.life = 2
+                elif self.life == 2:
+                    self.invincibility = True
+                    Life.image = load_image('Image/life1.png')
+                    self.life = 1
+                elif self.life == 1:
+                    game_framework.change_state(gameover)
         if group == 'isaac:item':
             self.change = 2
             self.image = load_image('Image/red_animation.png')
