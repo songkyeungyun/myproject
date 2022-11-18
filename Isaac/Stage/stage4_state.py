@@ -1,15 +1,13 @@
 from pico2d import *
 import game_framework
-import Stage.stage0_state as stage0_state
 import game_world
 import pick_item
 
 from isaac import Isaac
 from life import Life
+from item import Item
 
-isaac = None
-stage = None
-life = None
+import server
 
 class Stage:
     def __init__(self):
@@ -26,15 +24,19 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
             game_framework.quit()
         else:
-            isaac.handle_event(event)
+            server.isaac.handle_event(event)
 
 def enter():
-    global isaac, stage, life
-    isaac = Isaac(120, 255)
+    global stage
+    server.isaac = Isaac(120, 255)
     stage = Stage()
-    life = Life()
-    game_world.add_object(life, 1)
-    game_world.add_object(isaac, 1)
+    server.isaac.change = 3
+    server.item = Item()
+    server.life = Life()
+    game_world.add_object(server.life, 1)
+    game_world.add_object(server.isaac, 1)
+    game_world.add_object(server.item, 1)
+    game_world.add_collision_group(server.isaac, server.item, 'isaac:item')
 
 def exit():
     game_world.clear()
@@ -46,10 +48,13 @@ def update():
         if collide(a, b):
             a.handle_collision(b, group)
             b.handle_collision(a, group)
-    if isaac.y <= 80 and 380 <= isaac.x <= 420:
-        isaac.dir_x = 0
-        isaac.dir_y = 0
+    if server.isaac.x <= 70 and 245 <= server.isaac.y <= 285:
+        server.isaac.dir_x = 0
+        server.isaac.dir_y = 0
         game_framework.pop_state()
+    if server.isaac.change == 2:
+        server.isaac.change = 3
+        game_framework.push_state(pick_item)
 
 def draw_world():
     stage.draw()
@@ -62,9 +67,11 @@ def draw():
     draw_world()
     update_canvas()
 def pause():
+    game_world.remove_object(server.isaac)
     pass
 
 def resume():
+    game_world.add_object(server.isaac, 1)
     pass
 
 def test_self():

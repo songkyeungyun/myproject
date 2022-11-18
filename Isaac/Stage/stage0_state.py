@@ -82,10 +82,6 @@ def pause():
     pass
 
 def resume():
-    if isaac.y > 300:
-        isaac.change = 3
-        isaac.image = load_image('Image/red_animation.png')
-        isaac.isaac_image = load_image('Image/red_isaac.png')
     game_world.add_object(isaac, 1)
     game_world.add_object(life, 1)
     pass

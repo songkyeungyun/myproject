@@ -31,10 +31,19 @@ class Monster_1():
         self.build_behavior_tree()
         self.image = load_image('Image/monster2 animation.png')
         self.life = 3
+        self.chase = True
+
+    def wait(self):
+        self.speed = 0
+        self.wait_timer -= game_framework.frame_time
+        if self.wait_timer <= 0:
+            self.wait_timer = 2.0
+            self.chase =True
+            return BehaviorTree.SUCCESS
 
     def find_player(self):
         distance2 = (server.isaac.x - self.x)**2 + (server.isaac.y - self.y)**2
-        if distance2 <= (PIXEL_PER_METER*30)**2:
+        if distance2 <= (PIXEL_PER_METER*10)**2:
             return BehaviorTree.SUCCESS
         else:
             self.speed = 0
@@ -42,17 +51,22 @@ class Monster_1():
 
 
     def move_to_player(self):
-        self.speed = RUN_SPEED_PPS
-        self.dir = math.atan2(server.isaac.y - self.y, server.isaac.x - self.x)
-        return BehaviorTree.SUCCESS
+        if self.chase == True:
+            self.speed = RUN_SPEED_PPS
+            self.dir = math.atan2(server.isaac.y - self.y, server.isaac.x - self.x)
+            return BehaviorTree.SUCCESS
 
     def build_behavior_tree(self):
+        wait_node = LeafNode('wait', self.wait)
         find_player_node = LeafNode('find player', self.find_player)
         move_to_player_node = LeafNode('move to player', self.move_to_player)
         chase_node = SequenceNode('chase')
         chase_node.add_children(find_player_node, move_to_player_node)
 
-        self.bt = BehaviorTree(chase_node)
+        chase_wait_node = SelectorNode('chase or wander')
+        chase_wait_node.add_children(chase_node, wait_node)
+
+        self.bt = BehaviorTree(chase_wait_node)
         # fill here
         pass
     def update(self):
@@ -78,15 +92,9 @@ class Monster_1():
     def handle_collision(self, other, group):
 
         if group == 'isaac:monster1':
-            math.cos(self.x) * -1
+            self.chase = False
+            self.x =self.x - 20
         if group == 'tear:monster1':
-            if self.life == 3:
-                self.life = 2
-            elif self.life == 2:
-                self.life = 1
-            elif self.life == 1:
-                game_world.remove_object(self)
-        if group == 'red_tear:monster1':
             if self.life == 3:
                 self.life = 2
             elif self.life == 2:

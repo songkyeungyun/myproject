@@ -194,6 +194,7 @@ class Isaac:
 
             game_world.add_object(tear, 1)
             game_world.add_collision_group(tear, server.monster2, 'tear:monster2')
+            game_world.add_collision_group(tear, server.monster1, 'tear:monster1')
         elif self.change == 3:
             self.image = load_image('Image/red_animation.png')
             self.isaac_image = load_image('Image/red_isaac.png')
@@ -207,12 +208,12 @@ class Isaac:
                 red_tear = RedTear(self.x, self.y, self.dir_x*1.2, 0)
 
             game_world.add_object(red_tear, 1)
-            game_world.add_collision_group(red_tear, server.monster1, 'red_tear:monster1')
     def get_bb(self):
         return self.x - 20, self.y - 30, self.x + 25, self.y + 30
 
     def handle_collision(self, other, group):
         if group == 'isaac:monster1':
+            print('collisiton isaac monster1')
             if self.life == 3:
                 Life.image = load_image('Image/life2.png')
                 self.life = 2
@@ -232,3 +233,5 @@ class Isaac:
                 game_framework.change_state(gameover)
         if group == 'isaac:item':
             self.change = 2
+            self.image = load_image('Image/red_animation.png')
+            self.isaac_image = load_image('Image/red_isaac.png')

@@ -23,7 +23,6 @@ def enter():
     global stage
     server.isaac = Isaac(400, 380)
     stage = Stage()
-    server.isaac.change = 3
     server.life = Life()
     server.monster1 = [Monster_1() for i in range(4)]
     game_world.add_object(server.isaac, 1)
@@ -34,9 +33,6 @@ def enter():
     server.monster1[3].y, server.monster1[3].x = 100, 700
     game_world.add_objects(server.monster1, 1)
     game_world.add_collision_group(server.isaac, server.monster1, 'isaac:monster1')
-    if server.isaac.change == 3:
-        server.isaac.image = load_image('Image/red_animation.png')
-        server.isaac.isaac_image = load_image('Image/red_isaac.png')
 
 
 
@@ -86,7 +82,7 @@ def draw():
 
 def pause():
     game_world.remove_object(server.isaac)
-    pass
+    game_world.remove_object(server.monster1)
 
 def resume():
     game_world.add_object(server.isaac, 1)
