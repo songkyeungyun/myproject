@@ -1,7 +1,8 @@
 from pico2d import *
 import game_framework
-import Stage.stage2_state as stage2_state
+import Stage.stage4_state as stage4_state
 
+import server
 image = None
 logo_time = 0.0
 
@@ -25,8 +26,8 @@ def update():
     # 게임 월드 렌더링
 def draw():
     clear_canvas()
-    stage2_state.draw_world()
-    image.draw(400, 200)
+    stage4_state.draw_world()
+    image.draw(server.isaac.x, server.isaac.y-10)
     update_canvas()
 
 def handle_events():

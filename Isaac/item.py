@@ -1,7 +1,6 @@
 from pico2d import *
 import game_world
 
-
 class Item:
     def __init__(self):
         Item.image = load_image('Image/item.png')
@@ -20,4 +19,5 @@ class Item:
 
     def handle_collision(self, other, group):
         if group == 'isaac:item':
+            print(1)
             game_world.remove_object(self)
