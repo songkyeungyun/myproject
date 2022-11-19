@@ -170,9 +170,8 @@ class Isaac:
                 print('error:', self.cur_state.__name__, ' ', event_name[event])
 
             self.cur_state.enter(self, event)
-        if 2 < self.timer:
+        if 1.5 < self.timer:
             self.invincibility = False
-        print(self.timer)
     def draw(self):
         self.cur_state.draw(self)
         # draw_rectangle(*self.get_bb())

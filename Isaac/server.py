@@ -1,4 +1,5 @@
 isaac = None
+red_isaac = None
 monster1 = []
 monster2 = []
 life = None
