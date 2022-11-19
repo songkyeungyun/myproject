@@ -38,7 +38,6 @@ class Monster_1():
         self.wait_timer -= game_framework.frame_time
         if self.wait_timer <= 0:
             self.wait_timer = 2.0
-            self.chase =True
             return BehaviorTree.SUCCESS
 
     def find_player(self):
@@ -78,6 +77,8 @@ class Monster_1():
         self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
         self.x = clamp(100, self.x, 700)
         self.y = clamp(100, self.y, 400)
+        if server.isaac.invincibility == False:
+            self.chase = True
 
     def draw(self):
         if math.cos(self.dir) >= 0:
@@ -90,10 +91,8 @@ class Monster_1():
         return self.x - 10, self.y - 10, self.x + 10, self.y + 10
 
     def handle_collision(self, other, group):
-
         if group == 'isaac:monster1':
             self.chase = False
-            self.x =self.x - 20
         if group == 'tear:monster1':
             if self.life == 3:
                 self.life = 2

@@ -4,10 +4,8 @@ import game_world
 import game_framework
 import time
 import gameover
-
+import server
 from life import Life
-import Stage.stage1_state as stage1_state
-# import Stage.stage3_state as stage3_state
 
 NULL, RD, LD, RU, LU, WD, SD, WU, SU, SPACE = range(10)
 event_name = ['Null', 'RD', 'LD', 'RU', 'LU', 'SPACE', 'WD', 'SD', 'WU', 'SU']
@@ -143,7 +141,7 @@ class RedIsaac:
         self.dir_y = 0
         self.face_dirx = 0
         self.face_diry = 0
-        self.life = 3
+        self.life = 1
         self.image = load_image('Image/red_animation.png')
         self.isaac_image = load_image('Image/red_isaac.png')
         self.time = 0
@@ -192,23 +190,22 @@ class RedIsaac:
     def attack(self):
         self.image = load_image('Image/red_animation.png')
         if self.dir_x == 0 and self.dir_y == 0:
-            redtear = RedTear(self.x, self.y, self.face_dirx, self.face_diry)
+            red_tear = RedTear(self.x, self.y, self.face_dirx, self.face_diry)
         elif self.dir_y == 0:
-            redtear = RedTear(self.x, self.y, self.dir_x, 0)
+            red_tear = RedTear(self.x, self.y, self.dir_x, 0)
         elif self.dir_x == 0:
-            redtear = RedTear(self.x, self.y, 0, self.dir_y)
+            red_tear = RedTear(self.x, self.y, 0, self.dir_y)
         else:
-            redtear = RedTear(self.x, self.y, self.dir_x, 0)
+            red_tear = RedTear(self.x, self.y, self.dir_x, 0)
 
-        game_world.add_object(redtear, 1)
-        # game_world.add_collision_group(redtear, stage3_state.monster1, 'red_tear:monster1')
-        game_world.add_collision_group(red_tear, stage1_state.monster2, 'red_tear:monster2')
+        game_world.add_object(red_tear, 1)
+        game_world.add_collision_group(red_tear, server.monster1, 'red_tear:monster1')
 
     def get_bb(self):
         return self.x - 20, self.y - 30, self.x + 25, self.y + 30
 
     def handle_collision(self, other, group):
-        if group == 'redisaac:monster1':
+        if group == 'red_isaac:monster1':
             if self.life == 3:
                 Life.image = load_image('Image/life2.png')
                 self.life = 2
@@ -217,7 +214,7 @@ class RedIsaac:
                 self.life = 1
             elif self.life == 1:
                 game_framework.change_state(gameover)
-        if group == 'redisaac:monster2':
+        if group == 'red_isaac:monster2':
             if self.life == 3:
                 Life.image = load_image('Image/life2.png')
                 self.life = 2
