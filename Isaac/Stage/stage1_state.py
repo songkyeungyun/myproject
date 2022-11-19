@@ -77,7 +77,6 @@ def draw():
 def pause():
     game_world.remove_object(server.isaac)
     game_world.remove_object(server.monster2)
-
     pass
 
 def resume():

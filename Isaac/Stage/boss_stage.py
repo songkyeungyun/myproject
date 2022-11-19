@@ -1,9 +1,8 @@
 from pico2d import *
 import game_framework
-import Stage.stage4_state as stage4_state
 import game_world
 
-from isaac import Isaac
+from red_isaac import RedIsaac
 from monster1 import Monster_1
 from life import Life
 
@@ -11,7 +10,7 @@ import server
 
 class Stage:
     def __init__(self):
-        self.image = load_image('Image/stage3.png')
+        self.image = load_image('Image/boss_stage.png')
 
     def draw(self):
         self.image.draw(400, 300)
@@ -20,20 +19,16 @@ class Stage:
 
 def enter():
     global stage
-    server.isaac = Isaac(400, 380)
+    server.red_isaac = RedIsaac(120, 225)
     stage = Stage()
     server.life = Life()
-    server.monster1 = [Monster_1() for i in range(4)]
-    game_world.add_object(server.isaac, 1)
+    server.monster1 = [Monster_1() for i in range(1)]
+    game_world.add_object(server.red_isaac, 1)
     game_world.add_object(server.life, 1)
-    server.monster1[0].y, server.monster1[0].x = 400, 700
-    server.monster1[1].y, server.monster1[1].x = 100, 100
-    server.monster1[2].y, server.monster1[2].x = 400, 100
-    server.monster1[3].y, server.monster1[3].x = 100, 700
+    server.monster1[0].y, server.monster1[0].x = 100, 100
     game_world.add_objects(server.monster1, 1)
-    Life.image = load_image('Image/life2.png')
-    server.isaac.life = 2
-    game_world.add_collision_group(server.isaac, server.monster1, 'isaac:monster1')
+    Life.image = load_image('Image/life1.png')
+    game_world.add_collision_group(server.red_isaac, server.monster1, 'red_isaac:monster1')
 
 
 
@@ -50,15 +45,11 @@ def update():
         if collide(a, b):
             a.handle_collision(b, group)
             b.handle_collision(a, group)
-    if server.isaac.y >= 420 and 380 <= server.isaac.x <= 420:
-        server.isaac.dir_x = 0
-        server.isaac.dir_y = 0
-        game_framework.pop_state()
-    elif server.isaac.x >= 730 and 245 <= server.isaac.y <= 285:
+    if server.isaac.x >= 730 and 245 <= server.isaac.y <= 285:
         server.isaac.dir_x = 0
         server.isaac.dir_y = 0
         server.isaac.x = 720
-        game_framework.push_state(stage4_state)
+        game_framework.pop_state()
 
 def handle_events():
     events = get_events()
@@ -68,7 +59,7 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
             game_framework.quit()
         else:
-            server.isaac.handle_event(event)
+            server.red_isaac.handle_event(event)
 
 def draw_world():
     stage.draw()

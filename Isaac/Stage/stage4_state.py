@@ -2,6 +2,7 @@ from pico2d import *
 import game_framework
 import game_world
 import pick_item
+import Stage.boss_stage as boss_state
 
 from isaac import Isaac
 from life import Life
@@ -36,6 +37,7 @@ def enter():
     game_world.add_object(server.life, 1)
     game_world.add_object(server.isaac, 1)
     game_world.add_object(server.item, 1)
+    Life.image = load_image('Image/life1.png')
     game_world.add_collision_group(server.isaac, server.item, 'isaac:item')
 
 def exit():
@@ -52,6 +54,11 @@ def update():
         server.isaac.dir_x = 0
         server.isaac.dir_y = 0
         game_framework.pop_state()
+    elif server.isaac.x >= 730 and 245 <= server.isaac.y <= 285:
+        server.isaac.dir_x = 0
+        server.isaac.dir_y = 0
+        server.isaac.x = 720
+        game_framework.push_state(boss_state)
     if server.isaac.change == 2:
         server.isaac.change = 3
         game_framework.push_state(pick_item)
