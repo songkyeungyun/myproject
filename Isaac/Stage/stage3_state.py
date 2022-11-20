@@ -28,11 +28,9 @@ def enter():
     game_world.add_object(server.life, 1)
     server.monster1[0].y, server.monster1[0].x = 400, 700
     server.monster1[1].y, server.monster1[1].x = 100, 100
-    server.monster1[2].y, server.monster1[2].x = 400, 100
-    server.monster1[3].y, server.monster1[3].x = 100, 700
+    # server.monster1[2].y, server.monster1[2].x = 400, 100
+    # server.monster1[3].y, server.monster1[3].x = 100, 700
     game_world.add_objects(server.monster1, 1)
-    Life.image = load_image('Image/life2.png')
-    server.isaac.life = 2
     game_world.add_collision_group(server.isaac, server.monster1, 'isaac:monster1')
 
 

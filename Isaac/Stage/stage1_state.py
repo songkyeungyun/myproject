@@ -34,12 +34,12 @@ def enter():
     stage = Stage()
     server.life = Life()
     game_world.add_object(server.life, 1)
-    server.monster2 = [Monster_2() for i in range(4)]
+    server.monster2 = [Monster_2() for i in range(2)]
     game_world.add_object(server.isaac, 1)
-    server.monster2[0].y, server.monster2[0].x = 400, 700
+    server.monster2[0].y, server.monster2[0].x = 400, 100
     server.monster2[1].y, server.monster2[1].x = 100, 100
-    server.monster2[2].y, server.monster2[2].x = 400, 100
-    server.monster2[3].y, server.monster2[3].x = 100, 700
+    # server.monster2[2].y, server.monster2[2].x = 400, 100
+    # server.monster2[3].y, server.monster2[3].x = 100, 700
     game_world.add_objects(server.monster2, 1)
     game_world.add_collision_group(server.isaac, server.monster2, 'isaac:monster2')
 
