@@ -85,4 +85,7 @@ class Monster_2():
             elif self.life == 2: self.life = 1
             elif self.life == 1:
                 game_world.remove_object(self)
+        if group == 'monster2:block1':
+            pass
+
 

@@ -18,4 +18,7 @@ class Block:
         return self.x - 25, self.y - 25, self.x + 25, self.y + 25
 
     def handle_collision(self, other, group):
-        pass
+        if group == 'isaac:block1':
+            pass
+        if group == 'monster2:block1':
+            pass

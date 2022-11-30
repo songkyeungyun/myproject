@@ -55,9 +55,11 @@ class RUN:
         if event == RD:
             self.key[1] = True
             self.dir_x = 1
+            self.speed_x = 5
         if event == LD:
             self.key[0] = True
             self.dir_x = -1
+            self.speed_x = -5
         if event == RU:
             self.key[1] = False
         if event == LU:
@@ -66,14 +68,18 @@ class RUN:
         if event == WD:
             self.key[3] = True
             self.dir_y = 1
+            self.speed_y = 5
         if event == SD:
             self.key[2] = True
             self.dir_y = -1
+            self.speed_y = -5
         if event == WU:
             self.dir_y = 0
+            self.speed_y = 0
             self.key[3] = False
         if event == SU:
             self.dir_y = 0
+            self.speed_y = 0
             self.key[2] = False
 
         for key in self.key:
@@ -148,6 +154,8 @@ class Isaac:
         self.invincibility = False
         self.image = load_image('Image/animation.png')
         self.isaac_image = load_image('Image/isaac.png')
+        self.speed_x = 0
+        self.speed_y = 0
 
         self.time = 0
         self.cur_time = 0
@@ -174,7 +182,11 @@ class Isaac:
         if 1.5 < self.timer:
             self.invincibility = False
     def draw(self):
-        self.cur_state.draw(self)
+        if self.invincibility == True:
+            if self.timer <= 0.25 or 0.5 <= self.timer <= 0.75 or 1.0 <= self.timer <= 1.25:
+                self.cur_state.draw(self)
+        else:
+            self.cur_state.draw(self)
         # draw_rectangle(*self.get_bb())
 
     def add_event(self, event):
@@ -188,13 +200,13 @@ class Isaac:
     def attack(self):
         if self.change == 1:
             if self.dir_x == 0 and self.dir_y == 0:
-                tear = Tear(self.x, self.y, self.face_dirx, self.face_diry)
+                tear = Tear(self.x, self.y, self.speed_x, self.speed_y)
             elif self.dir_y == 0:
-                tear = Tear(self.x, self.y, self.dir_x, 0)
+                tear = Tear(self.x, self.y, self.speed_x, 0)
             elif self.dir_x == 0:
-                tear = Tear(self.x, self.y, 0, self.dir_y)
+                tear = Tear(self.x, self.y, 0, self.speed_y)
             else:
-                tear = Tear(self.x, self.y, self.dir_x, 0)
+                tear = Tear(self.x, self.y, self.speed_x, 0)
 
             game_world.add_object(tear, 1)
             game_world.add_collision_group(tear, server.monster2, 'tear:monster2')
@@ -203,13 +215,13 @@ class Isaac:
             self.image = load_image('Image/red_animation.png')
             self.isaac_image = load_image('Image/red_isaac.png')
             if self.dir_x == 0 and self.dir_y == 0:
-                red_tear = RedTear(self.x, self.y, self.face_dirx*1.2, self.face_diry*1.2)
+                red_tear = RedTear(self.x, self.y, self.speed_x*1.2, self.speed_y*1.2)
             elif self.dir_y == 0:
-                red_tear = RedTear(self.x, self.y, self.dir_x*1.2, 0)
+                red_tear = RedTear(self.x, self.y, self.speed_x*1.2, 0)
             elif self.dir_x == 0:
-                red_tear = RedTear(self.x, self.y, 0, self.dir_y*1.2)
+                red_tear = RedTear(self.x, self.y, 0, self.speed_y*1.2)
             else:
-                red_tear = RedTear(self.x, self.y, self.dir_x*1.2, 0)
+                red_tear = RedTear(self.x, self.y, self.speed_x*1.2, 0)
 
             game_world.add_object(red_tear, 1)
     def get_bb(self):
@@ -246,5 +258,9 @@ class Isaac:
             self.isaac_image = load_image('Image/red_isaac.png')
         if group == 'isaac:block1':
             print(1)
-
-            self.add_event(NULL)
+            if self.dir_x > 0:
+                self.x -= self.dir_x * RUN_SPEED_PPS * game_framework.frame_time +1
+            elif self.dir_x < 0:
+                self.x -= self.dir_x * RUN_SPEED_PPS * game_framework.frame_time - 1
+            elif self.dir_y != 0:
+                self.y -= self.dir_y * RUN_SPEED_PPS * game_framework.frame_time

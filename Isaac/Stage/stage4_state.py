@@ -37,7 +37,12 @@ def enter():
     game_world.add_object(server.life, 1)
     game_world.add_object(server.isaac, 1)
     game_world.add_object(server.item, 1)
-    Life.image = load_image('Image/life1.png')
+    if server.isaac.life ==3:
+        Life.image = load_image('Image/life3.png')
+    elif server.isaac.life ==2:
+        Life.image = load_image('Image/life2.png')
+    else:
+        Life.image = load_image('Image/life1.png')
     game_world.add_collision_group(server.isaac, server.item, 'isaac:item')
 
 def exit():

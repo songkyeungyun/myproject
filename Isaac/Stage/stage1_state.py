@@ -50,6 +50,7 @@ def enter():
     game_world.add_objects(server.block1, 1)
     game_world.add_collision_group(server.isaac, server.monster2, 'isaac:monster2')
     game_world.add_collision_group(server.isaac, server.block1, 'isaac:block1')
+    game_world.add_collision_group(server.monster2, server.block1, 'monster2:block1')
 
 
 # 게임 종료 - 객체를 소멸
