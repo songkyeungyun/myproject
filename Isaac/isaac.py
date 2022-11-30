@@ -7,6 +7,7 @@ import gameover
 import server
 from red_tear import RedTear
 from life import Life
+from block1 import Block
 
 NULL, RD, LD, RU, LU, WD, SD, WU, SU, SPACE = range(10)
 event_name = ['Null', 'RD', 'LD', 'RU', 'LU', 'SPACE', 'WD', 'SD', 'WU', 'SU']
@@ -187,13 +188,13 @@ class Isaac:
     def attack(self):
         if self.change == 1:
             if self.dir_x == 0 and self.dir_y == 0:
-                tear = Tear(self.x, self.y, self.face_dirx*0.8, self.face_diry*0.8)
+                tear = Tear(self.x, self.y, self.face_dirx, self.face_diry)
             elif self.dir_y == 0:
-                tear = Tear(self.x, self.y, self.dir_x*0.8, 0)
+                tear = Tear(self.x, self.y, self.dir_x, 0)
             elif self.dir_x == 0:
-                tear = Tear(self.x, self.y, 0, self.dir_y*0.8)
+                tear = Tear(self.x, self.y, 0, self.dir_y)
             else:
-                tear = Tear(self.x, self.y, self.dir_x*0.8, 0)
+                tear = Tear(self.x, self.y, self.dir_x, 0)
 
             game_world.add_object(tear, 1)
             game_world.add_collision_group(tear, server.monster2, 'tear:monster2')
@@ -243,3 +244,7 @@ class Isaac:
             self.change = 2
             self.image = load_image('Image/red_animation.png')
             self.isaac_image = load_image('Image/red_isaac.png')
+        if group == 'isaac:block1':
+            print(1)
+
+            self.add_event(NULL)

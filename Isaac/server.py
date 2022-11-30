@@ -6,4 +6,4 @@ life = None
 tear = None
 red_tear = None
 item = None
-
+block1 = []

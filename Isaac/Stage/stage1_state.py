@@ -7,6 +7,7 @@ import game_world
 from monster2 import Monster_2
 from life import Life
 from isaac import Isaac
+from block1 import Block
 
 import server
 
@@ -35,13 +36,20 @@ def enter():
     server.life = Life()
     game_world.add_object(server.life, 1)
     server.monster2 = [Monster_2() for i in range(2)]
+    server.block1 = [Block() for i in range(4)]
     game_world.add_object(server.isaac, 1)
     server.monster2[0].y, server.monster2[0].x = 400, 100
     server.monster2[1].y, server.monster2[1].x = 100, 100
     # server.monster2[2].y, server.monster2[2].x = 400, 100
     # server.monster2[3].y, server.monster2[3].x = 100, 700
+    server.block1[0].y, server.block1[0].x = 350, 100
+    server.block1[1].y, server.block1[1].x = 350, 150
+    server.block1[2].y, server.block1[2].x = 150, 700
+    server.block1[3].y, server.block1[3].x = 150, 650
     game_world.add_objects(server.monster2, 1)
+    game_world.add_objects(server.block1, 1)
     game_world.add_collision_group(server.isaac, server.monster2, 'isaac:monster2')
+    game_world.add_collision_group(server.isaac, server.block1, 'isaac:block1')
 
 
 # 게임 종료 - 객체를 소멸
