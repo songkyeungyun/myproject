@@ -30,8 +30,8 @@ def enter():
     game_world.add_object(server.life, 1)
     server.monster1[0].y, server.monster1[0].x = 400, 700
     server.monster1[1].y, server.monster1[1].x = 100, 100
-    # server.monster1[2].y, server.monster1[2].x = 400, 100
-    # server.monster1[3].y, server.monster1[3].x = 100, 700
+    server.monster1[2].y, server.monster1[2].x = 400, 100
+    server.monster1[3].y, server.monster1[3].x = 100, 700
     server.block1[0].y, server.block1[0].x = 350, 100
     server.block1[1].y, server.block1[1].x = 350, 150
     server.block1[2].y, server.block1[2].x = 350, 200
@@ -53,6 +53,7 @@ def enter():
     game_world.add_collision_group(server.isaac, server.monster1, 'isaac:monster1')
     game_world.add_collision_group(server.isaac, server.block1, 'isaac:block1')
     game_world.add_collision_group(server.monster1, server.block1, 'monster1:block1')
+
 
 
 
@@ -103,7 +104,7 @@ def draw():
 def pause():
     game_world.remove_object(server.isaac)
     game_world.remove_object(server.monster1)
-    game_world.remove_objects(server.block1)
+    game_world.remove_object(server.block1)
 
 def resume():
     game_world.add_object(server.isaac, 1)

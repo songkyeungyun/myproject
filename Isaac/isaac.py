@@ -212,6 +212,7 @@ class Isaac:
             game_world.add_object(tear, 1)
             game_world.add_collision_group(tear, server.monster2, 'tear:monster2')
             game_world.add_collision_group(tear, server.monster1, 'tear:monster1')
+            game_world.add_collision_group(tear, server.block1, 'tear:block1')
         elif self.change == 3:
             self.image = load_image('Image/red_animation.png')
             self.isaac_image = load_image('Image/red_isaac.png')

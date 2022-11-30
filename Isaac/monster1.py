@@ -100,3 +100,5 @@ class Monster_1():
                 self.life = 1
             elif self.life == 1:
                 game_world.remove_object(self)
+        if group == 'monster1:block1':
+            self.y -= self.speed * math.sin(self.dir) * game_framework.frame_time

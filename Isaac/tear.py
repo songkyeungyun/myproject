@@ -25,4 +25,6 @@ class Tear:
             game_world.remove_object(self)
         if group == 'tear:monster2':
             game_world.remove_object(self)
+        if group == 'tear:block1':
+            game_world.remove_object(self)
 
