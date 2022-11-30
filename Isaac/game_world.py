@@ -15,7 +15,9 @@ def remove_object(o):
             remove_collision_object(o)
             del o
             return
-     # raise ValueError('Trying destroy non existing object')
+    # raise ValueError('Trying destroy non existing object')
+
+
 
 def all_objects():
     for layer in objects:

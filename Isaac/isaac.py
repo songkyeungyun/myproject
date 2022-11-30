@@ -198,6 +198,7 @@ class Isaac:
             self.add_event(key_event)
 
     def attack(self):
+        print('attack')
         if self.change == 1:
             if self.dir_x == 0 and self.dir_y == 0:
                 tear = Tear(self.x, self.y, self.speed_x, self.speed_y)
@@ -257,7 +258,6 @@ class Isaac:
             self.image = load_image('Image/red_animation.png')
             self.isaac_image = load_image('Image/red_isaac.png')
         if group == 'isaac:block1':
-            print(1)
             if self.dir_x > 0:
                 self.x -= self.dir_x * RUN_SPEED_PPS * game_framework.frame_time +1
             elif self.dir_x < 0:

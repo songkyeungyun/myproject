@@ -19,5 +19,4 @@ class Item:
 
     def handle_collision(self, other, group):
         if group == 'isaac:item':
-            print(1)
             game_world.remove_object(self)

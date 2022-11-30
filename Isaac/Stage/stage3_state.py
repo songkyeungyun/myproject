@@ -103,7 +103,7 @@ def draw():
 def pause():
     game_world.remove_object(server.isaac)
     game_world.remove_object(server.monster1)
-    game_world.remove_object(server.block1)
+    game_world.remove_objects(server.block1)
 
 def resume():
     game_world.add_object(server.isaac, 1)
