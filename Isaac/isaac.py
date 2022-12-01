@@ -142,6 +142,9 @@ RUN_SPEED_PPS = RUN_SPEED_MPS * PIXEL_PER_METER
 
 class Isaac:
     def __init__(self, x, y):
+        self.bgm = load_music('music/stage.mp3')
+        self.bgm.set_volume(32)
+        self.bgm.repeat_play()
         self.x = x
         self.y = y
         self.frame = 0
@@ -165,6 +168,14 @@ class Isaac:
         self.event_que = []
         self.cur_state = IDLE
         self.cur_state.enter(self, None)
+        Isaac.hurt_sound = load_wav('music/hurt.wav')
+        Isaac.hurt_sound.set_volume(32)
+
+        Isaac.die_sound = load_wav('music/die.wav')
+        Isaac.die_sound.set_volume(32)
+
+        Tear.attack_sound = load_wav('music/attack.wav')
+        Tear.attack_sound.set_volume(32)
 
     def update(self):
         self.cur_state.do(self)
@@ -198,7 +209,7 @@ class Isaac:
             self.add_event(key_event)
 
     def attack(self):
-        print('attack')
+        Tear.attack_sound.play()
         if self.change == 1:
             if self.dir_x == 0 and self.dir_y == 0:
                 tear = Tear(self.x, self.y, self.speed_x, self.speed_y)
@@ -210,9 +221,9 @@ class Isaac:
                 tear = Tear(self.x, self.y, self.speed_x, 0)
 
             game_world.add_object(tear, 1)
-            game_world.add_collision_group(tear, server.monster2, 'tear:monster2')
-            game_world.add_collision_group(tear, server.monster1, 'tear:monster1')
-            game_world.add_collision_group(tear, server.block1, 'tear:block1')
+            game_world.add_collision_group(tear, None, 'tear:monster2')
+            game_world.add_collision_group(tear, None, 'tear:monster1')
+            game_world.add_collision_group(tear, None, 'tear:block1')
         elif self.change == 3:
             self.image = load_image('Image/red_animation.png')
             self.isaac_image = load_image('Image/red_isaac.png')
@@ -234,32 +245,42 @@ class Isaac:
             self.time = time.time()
             if group == 'isaac:monster1':
                 if self.life == 3:
+                    Isaac.hurt_sound.play()
                     self.invincibility = True
                     Life.image = load_image('Image/life2.png')
                     self.life = 2
                 elif self.life == 2:
+                    Isaac.hurt_sound.play()
                     self.invincibility = True
                     Life.image = load_image('Image/life1.png')
                     self.life = 1
                 elif self.life == 1:
+                    Isaac.die_sound.play()
                     game_framework.change_state(gameover)
             if group == 'isaac:monster2':
                 if self.life == 3:
+                    Isaac.hurt_sound.play()
                     self.invincibility = True
                     Life.image = load_image('Image/life2.png')
                     self.life = 2
                 elif self.life == 2:
+                    Isaac.hurt_sound.play()
                     self.invincibility = True
                     Life.image = load_image('Image/life1.png')
                     self.life = 1
                 elif self.life == 1:
+                    Isaac.die_sound.play()
                     game_framework.change_state(gameover)
         if group == 'isaac:item':
             self.change = 2
             self.image = load_image('Image/red_animation.png')
             self.isaac_image = load_image('Image/red_isaac.png')
         if group == 'isaac:block1':
-            if self.dir_x != 0:
-                self.x -= self.dir_x * RUN_SPEED_PPS * game_framework.frame_time + 1
-            if self.dir_y != 0:
-                self.y -= self.dir_y * RUN_SPEED_PPS * game_framework.frame_time + 1
+            if self.dir_x > 0:
+                self.x -= self.dir_x * RUN_SPEED_PPS * game_framework.frame_time + 5
+            elif self.dir_x < 0:
+                self.x += self.dir_x * RUN_SPEED_PPS * game_framework.frame_time * -1 + 7
+            if self.dir_y > 0:
+                self.y -= self.dir_y * RUN_SPEED_PPS * game_framework.frame_time + 5
+            if self.dir_y < 0:
+                self.y += self.dir_y * RUN_SPEED_PPS * game_framework.frame_time * -1 + 7

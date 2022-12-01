@@ -30,7 +30,7 @@ class Monster_2():
         self.frame = 0
         self.build_behavior_tree()
         self.image = load_image('Image/monster1 animation.png')
-        self.life = 1
+        self.life = 3
         self.chase = True
 
     def find_player(self):
@@ -81,11 +81,12 @@ class Monster_2():
         if group == 'isaac:monster2':
             self.chase = False
         if group == 'tear:monster2':
+            print(1)
             if self.life == 3: self.life = 2
             elif self.life == 2: self.life = 1
             elif self.life == 1:
                 game_world.remove_object(self)
         if group == 'monster2:block1':
-            pass
+            self.y -= self.speed * math.sin(self.dir) * game_framework.frame_time
 
 

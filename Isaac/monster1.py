@@ -30,7 +30,7 @@ class Monster_1():
         self.frame = 0
         self.build_behavior_tree()
         self.image = load_image('Image/monster2 animation.png')
-        self.life = 1
+        self.life = 2
         self.chase = True
 
     def wait(self):
