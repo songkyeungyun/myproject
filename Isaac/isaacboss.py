@@ -5,6 +5,7 @@ import Stage.boss_stage as boss_stage
 image = None
 logo_time = 0.0
 
+
 def enter():
     global image
     image = load_image('Image/isaac vs boss.png')
