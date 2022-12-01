@@ -142,9 +142,6 @@ RUN_SPEED_PPS = RUN_SPEED_MPS * PIXEL_PER_METER
 
 class Isaac:
     def __init__(self, x, y):
-        self.bgm = load_music('music/stage.mp3')
-        self.bgm.set_volume(32)
-        self.bgm.repeat_play()
         self.x = x
         self.y = y
         self.frame = 0

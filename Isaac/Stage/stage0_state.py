@@ -16,6 +16,9 @@ life = None
 class Stage:
     def __init__(self):
         self.image = load_image('Image/stage0.png')
+        self.bgm = load_music('music/stage.mp3')
+        self.bgm.set_volume(32)
+        self.bgm.repeat_play()
 
     def draw(self):
         self.image.draw(400, 300)

@@ -13,6 +13,9 @@ import server
 class Stage:
     def __init__(self):
         self.image = load_image('Image/stage4.png')
+        self.bgm = load_music('music/stage.mp3')
+        self.bgm.set_volume(32)
+        self.bgm.repeat_play()
 
     def draw(self):
         self.image.draw(400, 300)
@@ -47,6 +50,7 @@ def enter():
 
 def exit():
     game_world.clear()
+    stage.bgm = load_music('music/boss stage.mp3')
 
 def update():
     for game_object in game_world.all_objects():
@@ -84,6 +88,7 @@ def pause():
 
 def resume():
     game_world.add_object(server.isaac, 1)
+    stage.bgm.repeat_play()
     pass
 
 def test_self():
