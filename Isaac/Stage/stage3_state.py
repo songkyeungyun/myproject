@@ -53,6 +53,7 @@ def enter():
     game_world.add_collision_group(server.isaac, server.monster1, 'isaac:monster1')
     game_world.add_collision_group(server.isaac, server.block1, 'isaac:block1')
     game_world.add_collision_group(server.monster1, server.block1, 'monster1:block1')
+    game_world.add_collision_group(None, server.monster1, 'tear:monster1')
 
 
 

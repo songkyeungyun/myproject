@@ -2,7 +2,7 @@ from pico2d import *
 import game_framework
 import game_world
 import pick_item
-import Stage.boss_stage as boss_state
+import isaacboss
 
 from isaac import Isaac
 from life import Life
@@ -63,7 +63,7 @@ def update():
         server.isaac.dir_x = 0
         server.isaac.dir_y = 0
         server.isaac.x = 720
-        game_framework.push_state(boss_state)
+        game_framework.change_state(isaacboss)
     if server.isaac.change == 2:
         server.isaac.change = 3
         game_framework.push_state(pick_item)

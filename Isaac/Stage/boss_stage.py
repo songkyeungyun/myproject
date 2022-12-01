@@ -3,7 +3,6 @@ import game_framework
 import game_world
 
 from red_isaac import RedIsaac
-from monster1 import Monster_1
 from life import Life
 
 import server
@@ -19,16 +18,11 @@ class Stage:
 
 def enter():
     global stage
-    server.red_isaac = RedIsaac(120, 225)
+    server.red_isaac = RedIsaac(120, 240)
     stage = Stage()
     server.life = Life()
-    server.monster1 = [Monster_1() for i in range(1)]
     game_world.add_object(server.red_isaac, 1)
     game_world.add_object(server.life, 1)
-    server.monster1[0].y, server.monster1[0].x = 100, 100
-    game_world.add_objects(server.monster1, 1)
-    Life.image = load_image('Image/life1.png')
-    game_world.add_collision_group(server.red_isaac, server.monster1, 'red_isaac:monster1')
 
 
 
@@ -73,12 +67,9 @@ def draw():
     update_canvas()
 
 def pause():
-    game_world.remove_object(server.isaac)
-    game_world.remove_object(server.monster1)
+    pass
 
 def resume():
-    game_world.add_object(server.isaac, 1)
-    game_world.add_object(server.life, 1)
     pass
 
 def collide(a, b):

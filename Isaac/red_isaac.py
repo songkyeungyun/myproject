@@ -53,9 +53,11 @@ class RUN:
         if event == RD:
             self.key[1] = True
             self.dir_x = 1
+            self.speed_x = 5
         if event == LD:
             self.key[0] = True
             self.dir_x = -1
+            self.speed_x = -5
         if event == RU:
             self.key[1] = False
         if event == LU:
@@ -64,14 +66,18 @@ class RUN:
         if event == WD:
             self.key[3] = True
             self.dir_y = 1
+            self.speed_y = 5
         if event == SD:
             self.key[2] = True
             self.dir_y = -1
+            self.speed_y = -5
         if event == WU:
             self.dir_y = 0
+            self.speed_y = 0
             self.key[3] = False
         if event == SU:
             self.dir_y = 0
+            self.speed_y = 0
             self.key[2] = False
 
         for key in self.key:
@@ -147,6 +153,8 @@ class RedIsaac:
         self.time = 0
         self.cur_time = 0
         self.timer = 0
+        self.speed_x = 0
+        self.speed_y = 0
 
         self.pick = False
         self.red = False
@@ -190,16 +198,15 @@ class RedIsaac:
     def attack(self):
         self.image = load_image('Image/red_animation.png')
         if self.dir_x == 0 and self.dir_y == 0:
-            red_tear = RedTear(self.x, self.y, self.face_dirx, self.face_diry)
+            red_tear = RedTear(self.x, self.y, self.speed_x * 1.2, self.speed_y * 1.2)
         elif self.dir_y == 0:
-            red_tear = RedTear(self.x, self.y, self.dir_x, 0)
+            red_tear = RedTear(self.x, self.y, self.speed_x * 1.2, 0)
         elif self.dir_x == 0:
-            red_tear = RedTear(self.x, self.y, 0, self.dir_y)
+            red_tear = RedTear(self.x, self.y, 0, self.speed_y * 1.2)
         else:
-            red_tear = RedTear(self.x, self.y, self.dir_x, 0)
+            red_tear = RedTear(self.x, self.y, self.speed_x * 1.2, 0)
 
         game_world.add_object(red_tear, 1)
-        game_world.add_collision_group(red_tear, server.monster1, 'red_tear:monster1')
 
     def get_bb(self):
         return self.x - 20, self.y - 30, self.x + 25, self.y + 30

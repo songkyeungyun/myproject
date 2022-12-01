@@ -6,4 +6,5 @@ life = None
 tear = None
 red_tear = None
 item = None
+boss = None
 block1 = []

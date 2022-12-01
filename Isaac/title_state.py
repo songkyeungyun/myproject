@@ -8,6 +8,8 @@ def enter():
     global image
     image = load_image('Image/title.png')
 
+
+
 def exit():
     global image
     del image
@@ -30,6 +32,7 @@ def draw():
 
 def update():
     handle_events()
+
 
 def pause():
     pass
