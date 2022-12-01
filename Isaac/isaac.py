@@ -259,9 +259,7 @@ class Isaac:
             self.image = load_image('Image/red_animation.png')
             self.isaac_image = load_image('Image/red_isaac.png')
         if group == 'isaac:block1':
-            if self.dir_x > 0:
-                self.x -= self.dir_x * RUN_SPEED_PPS * game_framework.frame_time +1
-            elif self.dir_x < 0:
-                self.x -= self.dir_x * RUN_SPEED_PPS * game_framework.frame_time - 1
-            elif self.dir_y != 0:
-                self.y -= self.dir_y * RUN_SPEED_PPS * game_framework.frame_time
+            if self.dir_x != 0:
+                self.x -= self.dir_x * RUN_SPEED_PPS * game_framework.frame_time + 1
+            if self.dir_y != 0:
+                self.y -= self.dir_y * RUN_SPEED_PPS * game_framework.frame_time + 1
