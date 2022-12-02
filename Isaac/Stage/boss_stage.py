@@ -4,6 +4,7 @@ import game_world
 
 from red_isaac import RedIsaac
 from life import Life
+from boss import Boss
 
 import server
 
@@ -21,8 +22,10 @@ def enter():
     server.red_isaac = RedIsaac(120, 240)
     stage = Stage()
     server.life = Life()
+    server.boss = Boss()
     game_world.add_object(server.red_isaac, 1)
     game_world.add_object(server.life, 1)
+    game_world.add_object(server.boss, 1)
 
 
 
@@ -39,11 +42,6 @@ def update():
         if collide(a, b):
             a.handle_collision(b, group)
             b.handle_collision(a, group)
-    if server.isaac.x >= 730 and 245 <= server.isaac.y <= 285:
-        server.isaac.dir_x = 0
-        server.isaac.dir_y = 0
-        server.isaac.x = 720
-        game_framework.pop_state()
 
 def handle_events():
     events = get_events()
