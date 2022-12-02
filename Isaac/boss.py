@@ -72,8 +72,8 @@ class Boss():
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
         self.x += self.speed * math.cos(self.dir) * game_framework.frame_time
         self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
-        self.x = clamp(100, self.x, 700)
-        self.y = clamp(100, self.y, 400)
+        self.x = clamp(150, self.x, 650)
+        self.y = clamp(150, self.y, 350)
 
     def draw(self):
         if self.speed == 0:
