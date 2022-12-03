@@ -254,4 +254,18 @@ class RedIsaac:
                 elif self.life == 1:
                     RedIsaac.die_sound.play()
                     game_framework.change_state(gameover)
+            if group == 'laser:red_isaac':
+                if self.life == 3:
+                    RedIsaac.hurt_sound.play()
+                    Life.image = load_image('Image/life2.png')
+                    self.invincibility = True
+                    self.life = 2
+                elif self.life == 2:
+                    RedIsaac.hurt_sound.play()
+                    Life.image = load_image('Image/life1.png')
+                    self.invincibility = True
+                    self.life = 1
+                elif self.life == 1:
+                    RedIsaac.die_sound.play()
+                    game_framework.change_state(gameover)
 

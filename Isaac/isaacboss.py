@@ -26,7 +26,6 @@ def update():
     if logo_time > 2.0:
         logo_time = 0
         game_framework.change_state(boss_stage)
-    delay(0.01)
     logo_time += 0.01
 
     # 게임 월드 렌더링

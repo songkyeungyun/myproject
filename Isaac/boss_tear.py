@@ -2,9 +2,11 @@ from pico2d import *
 import game_world
 
 class BossTear:
+    image = None
 
     def __init__(self, x=700, y=400, velocity=1, v=1):
-        BossTear.image = load_image('Image/boss_tear.png')
+        if BossTear.image == None:
+            BossTear.image = load_image('Image/boss_tear.png')
         self.x, self.y, self.velocity, self.v = x, y, velocity, v
 
 

@@ -42,7 +42,7 @@ def enter():
     game_world.add_collision_group(None, server.boss, 'red_tear:boss')
     game_world.add_collision_group(None, server.red_isaac, 'boss_tear:red_isaac')
     game_world.add_collision_group(server.red_isaac, server.boss, 'red_isaac:boss')
-
+    game_world.add_collision_group(None, server.red_isaac, 'laser:red_isaac')
 
 # 게임 종료 - 객체를 소멸
 def exit():

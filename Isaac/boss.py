@@ -12,6 +12,7 @@ import finish_state
 import server
 
 boss_tear = []
+laser = None
 
 # zombie Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -40,6 +41,7 @@ class Boss():
         self.build_behavior_tree()
         self.image = load_image('Image/boss stop.png')
         self.life = 90
+        self.k = 0
         self.do = True
         self.invincibility = False
 
@@ -48,6 +50,10 @@ class Boss():
 
         Boss.shoot_sound = load_wav('music/boss shoot.wav')
         Boss.shoot_sound.set_volume(10)
+
+        Boss.die_sound = load_wav('music/boss die.wav')
+        Boss.die_sound.set_volume(100)
+
 
 
 
@@ -60,7 +66,11 @@ class Boss():
         else:
             self.image = load_image('Image/boss attack.png')
             if self.do == True:
-                self.tear()
+                self.k += 1
+                if self.k % 3 == 0:
+                    self.laser()
+                else:
+                    self.tear()
                 self.do = False
             Boss.shoot_sound.play()
         if self.wait_timer <= 0:
@@ -93,14 +103,16 @@ class Boss():
         pass
 
     def laser(self):
-        laser = Laser(self.x, self.y)
+        laser = Laser(400, self.y)
+        laser.time = time.time()
         game_world.add_object(laser, 0)
+        game_world.add_collision_group(laser, None, 'laser:red_isaac')
 
     def tear(self):
         if server.red_isaac.x > self.x:
-            boss_tear = [BossTear(self.x, self.y, random.randrange(1, 5), random.randrange(-3, 3)) for i in range(10)]
+            boss_tear = [BossTear(self.x, self.y, random.randrange(1, 5), random.randrange(-5, 5)) for i in range(10)]
         else:
-            boss_tear = [BossTear(self.x, self.y,random.randrange(-5, -1), random.randrange(-3, 3)) for i in range(10)]
+            boss_tear = [BossTear(self.x, self.y,random.randrange(-5, -1), random.randrange(-5, 5)) for i in range(10)]
         game_world.add_objects(boss_tear, 1)
 
         game_world.add_collision_group(boss_tear, None, 'boss_tear:red_isaac')
@@ -117,12 +129,15 @@ class Boss():
         self.y = clamp(150, self.y, 350)
         self.cur_time = time.time()
         self.timer1 = self.cur_time - self.time
+        if self.life == 0:
+            Boss.die_sound.play()
+
 
 
     def draw(self):
         if self.timer1 >= 0.1:
             self.image.draw(self.x, self.y)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         return self.x - 70, self.y - 70, self.x + 70, self.y + 50
@@ -131,9 +146,10 @@ class Boss():
         self.time = time.time()
         if group == 'red_tear:boss':
             game_world.remove_object(server.blood[self.life -1])
+            self.life -= 1
             if self.life == 0:
                 game_world.remove_object(self)
-                game_framework.change_state(finish_state)
-            self.life -= 1
+                # game_framework.change_state(finish_state)
+
 
 
