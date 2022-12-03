@@ -7,9 +7,6 @@ bgm = None
 def enter():
     global image, bgm
     image = load_image('Image/finish.png')
-    die_sound = load_wav('music/boss_die.wav')
-    die_sound.set_volume(32)
-    die_sound.play()
 
 def exit():
     global image
