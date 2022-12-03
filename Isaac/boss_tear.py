@@ -1,10 +1,10 @@
 from pico2d import *
 import game_world
 
-class RedTear:
+class BossTear:
 
     def __init__(self, x=700, y=400, velocity=1, v=1):
-        RedTear.image = load_image('Image/red_tear.png')
+        BossTear.image = load_image('Image/boss_tear.png')
         self.x, self.y, self.velocity, self.v = x, y, velocity, v
 
 
@@ -22,5 +22,5 @@ class RedTear:
         return self.x - 10, self.y - 10, self.x + 10, self.y + 10
 
     def handle_collision(self, other, group):
-        if group == 'red_tear:boss':
+        if group == 'boss_tear:red_isaac':
             game_world.remove_object(self)
