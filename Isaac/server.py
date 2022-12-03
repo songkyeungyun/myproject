@@ -10,3 +10,4 @@ boss = None
 block1 = []
 boss_life = None
 blood = []
+door = None
