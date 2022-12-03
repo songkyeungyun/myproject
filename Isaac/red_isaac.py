@@ -147,7 +147,7 @@ class RedIsaac:
         self.dir_y = 0
         self.face_dirx = 0
         self.face_diry = 0
-        self.life = 1
+        self.life = 3
         self.image = load_image('Image/red_animation.png')
         self.isaac_image = load_image('Image/red_isaac.png')
         self.time = 0
@@ -155,14 +155,22 @@ class RedIsaac:
         self.timer = 0
         self.speed_x = 0
         self.speed_y = 0
+        self.invincibility = False
 
-        self.pick = False
-        self.red = False
         self.key = [False, False, False, False]# 0=left 1=right 2=down 3=up
 
         self.event_que = []
         self.cur_state = IDLE
         self.cur_state.enter(self, None)
+
+        RedIsaac.hurt_sound = load_wav('music/hurt.wav')
+        RedIsaac.hurt_sound.set_volume(32)
+
+        RedIsaac.die_sound = load_wav('music/die.wav')
+        RedIsaac.die_sound.set_volume(32)
+
+        RedTear.attack_sound = load_wav('music/attack.wav')
+        RedTear.attack_sound.set_volume(50 )
 
     def update(self):
         self.cur_state.do(self)
@@ -177,14 +185,15 @@ class RedIsaac:
                 print('error:', self.cur_state.__name__, ' ', event_name[event])
 
             self.cur_state.enter(self, event)
-        if self.timer < 1:
-            self.pick = True
-        else:
-            self.red = True
-            self.pick = False
+        if 1.5 < self.timer:
+            self.invincibility = False
 
     def draw(self):
-        self.cur_state.draw(self)
+        if self.invincibility == True:
+            if self.timer <= 0.25 or 0.5 <= self.timer <= 0.75 or 1.0 <= self.timer <= 1.25:
+                self.cur_state.draw(self)
+        else:
+            self.cur_state.draw(self)
         # draw_rectangle(*self.get_bb())
 
     def add_event(self, event):
@@ -196,6 +205,7 @@ class RedIsaac:
             self.add_event(key_event)
 
     def attack(self):
+        RedTear.attack_sound.play()
         self.image = load_image('Image/red_animation.png')
         if self.dir_x == 0 and self.dir_y == 0:
             red_tear = RedTear(self.x, self.y, self.speed_x * 1.2, self.speed_y * 1.2)
@@ -207,26 +217,41 @@ class RedIsaac:
             red_tear = RedTear(self.x, self.y, self.speed_x * 1.2, 0)
 
         game_world.add_object(red_tear, 1)
+        game_world.add_collision_group(red_tear, None, 'red_tear:boss')
+        game_world.add_collision_group(red_tear, None, 'red_tear:block1')
 
     def get_bb(self):
         return self.x - 20, self.y - 30, self.x + 25, self.y + 30
 
     def handle_collision(self, other, group):
-        if group == 'red_isaac:monster1':
-            if self.life == 3:
-                Life.image = load_image('Image/life2.png')
-                self.life = 2
-            elif self.life == 2:
-                Life.image = load_image('Image/life1.png')
-                self.life = 1
-            elif self.life == 1:
-                game_framework.change_state(gameover)
-        if group == 'red_isaac:monster2':
-            if self.life == 3:
-                Life.image = load_image('Image/life2.png')
-                self.life = 2
-            elif self.life == 2:
-                Life.image = load_image('Image/life1.png')
-                self.life = 1
-            elif self.life == 1:
-                game_framework.change_state(gameover)
+        if self.invincibility == False:
+            self.time = time.time()
+            if group == 'red_isaac:boss':
+                if self.life == 3:
+                    RedIsaac.hurt_sound.play()
+                    Life.image = load_image('Image/life2.png')
+                    self.invincibility = True
+                    self.life = 2
+                elif self.life == 2:
+                    RedIsaac.hurt_sound.play()
+                    Life.image = load_image('Image/life1.png')
+                    self.invincibility = True
+                    self.life = 1
+                elif self.life == 1:
+                    RedIsaac.die_sound.play()
+                    game_framework.change_state(gameover)
+            if group == 'boss_tear:red_isaac':
+                if self.life == 3:
+                    RedIsaac.hurt_sound.play()
+                    Life.image = load_image('Image/life2.png')
+                    self.invincibility = True
+                    self.life = 2
+                elif self.life == 2:
+                    RedIsaac.hurt_sound.play()
+                    Life.image = load_image('Image/life1.png')
+                    self.invincibility = True
+                    self.life = 1
+                elif self.life == 1:
+                    RedIsaac.die_sound.play()
+                    game_framework.change_state(gameover)
+

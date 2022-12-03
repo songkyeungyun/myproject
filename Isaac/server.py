@@ -8,3 +8,5 @@ red_tear = None
 item = None
 boss = None
 block1 = []
+boss_life = None
+blood = []

@@ -8,12 +8,9 @@ import game_world
 
 from isaac import Isaac
 from life import Life
-from boss import Boss
-
 isaac = None
 stage = None
 life = None
-boss = None
 
 class Stage:
     def __init__(self):
@@ -37,14 +34,14 @@ def handle_events():
             isaac.handle_event(event)
 
 def enter():
-    global isaac, stage, life, boss
+    global isaac, stage, life
     isaac = Isaac(400, 250)
     stage = Stage()
     life = Life()
-    boss = Boss()
+
     game_world.add_object(isaac, 1)
     game_world.add_object(life, 1)
-    game_world.add_object(boss, 1)
+
 
 
 # 게임 종료 - 객체를 소멸

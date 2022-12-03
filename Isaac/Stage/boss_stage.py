@@ -2,15 +2,21 @@ from pico2d import *
 import game_framework
 import game_world
 
+
 from red_isaac import RedIsaac
 from life import Life
 from boss import Boss
+from boss_life import BossLife
+from blood import Blood
 
 import server
 
 class Stage:
     def __init__(self):
         self.image = load_image('Image/boss_stage.png')
+        self.bgm = load_music('music/boss.mp3')
+        self.bgm.set_volume(20)
+        self.bgm.repeat_play()
 
     def draw(self):
         self.image.draw(400, 300)
@@ -23,15 +29,25 @@ def enter():
     stage = Stage()
     server.life = Life()
     server.boss = Boss()
+    server.boss_life = BossLife()
+    server.blood = [Blood() for i in range(90)]
+    for i in range(90):
+        server.blood[i].x = 280 + i*3
+        server.blood[i].y = 481
     game_world.add_object(server.red_isaac, 1)
     game_world.add_object(server.life, 1)
     game_world.add_object(server.boss, 1)
-
+    game_world.add_object(server.boss_life, 1)
+    game_world.add_objects(server.blood, 1)
+    game_world.add_collision_group(None, server.boss, 'red_tear:boss')
+    game_world.add_collision_group(None, server.red_isaac, 'boss_tear:red_isaac')
+    game_world.add_collision_group(server.red_isaac, server.boss, 'red_isaac:boss')
 
 
 # 게임 종료 - 객체를 소멸
 def exit():
     game_world.clear()
+    stage.bgm.stop()
 
 # 게임 월드 객체를 업데이트 - 게임 로직
 def update():
