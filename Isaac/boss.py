@@ -40,7 +40,7 @@ class Boss():
         self.frame = 0
         self.build_behavior_tree()
         self.image = load_image('Image/boss stop.png')
-        self.life = 90
+        self.life = 5
         self.k = 0
         self.do = True
         self.invincibility = False
@@ -50,9 +50,6 @@ class Boss():
 
         Boss.shoot_sound = load_wav('music/boss shoot.wav')
         Boss.shoot_sound.set_volume(10)
-
-        Boss.die_sound = load_wav('music/boss die.wav')
-        Boss.die_sound.set_volume(100)
 
 
 
@@ -130,7 +127,9 @@ class Boss():
         self.cur_time = time.time()
         self.timer1 = self.cur_time - self.time
         if self.life == 0:
-            Boss.die_sound.play()
+            Boss.shoot_sound.stop()
+            Boss.breath_sound.stop()
+
 
 
 
@@ -149,7 +148,8 @@ class Boss():
             self.life -= 1
             if self.life == 0:
                 game_world.remove_object(self)
-                # game_framework.change_state(finish_state)
+                game_framework.change_state(finish_state)
+
 
 
 

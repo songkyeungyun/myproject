@@ -8,6 +8,7 @@ from life import Life
 from boss import Boss
 from boss_life import BossLife
 from blood import Blood
+from door import Door
 
 import server
 
@@ -17,6 +18,8 @@ class Stage:
         self.bgm = load_music('music/boss.mp3')
         self.bgm.set_volume(20)
         self.bgm.repeat_play()
+        Stage.die_sound = load_wav('music/boss die.wav')
+        Stage.die_sound.set_volume(100)
 
     def draw(self):
         self.image.draw(400, 300)
@@ -58,6 +61,7 @@ def update():
         if collide(a, b):
             a.handle_collision(b, group)
             b.handle_collision(a, group)
+
 
 def handle_events():
     events = get_events()

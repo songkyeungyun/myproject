@@ -7,6 +7,7 @@ import gameover
 import server
 from life import Life
 
+
 NULL, RD, LD, RU, LU, WD, SD, WU, SU, SPACE = range(10)
 event_name = ['Null', 'RD', 'LD', 'RU', 'LU', 'SPACE', 'WD', 'SD', 'WU', 'SU']
 
@@ -268,4 +269,3 @@ class RedIsaac:
                 elif self.life == 1:
                     RedIsaac.die_sound.play()
                     game_framework.change_state(gameover)
-
