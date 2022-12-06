@@ -47,6 +47,8 @@ def enter():
     else:
         Life.image = load_image('Image/life1.png')
     game_world.add_collision_group(server.isaac, server.item, 'isaac:item')
+    Life.image = load_image('Image/life2.png')
+    server.isaac.life = 2
 
 def exit():
     game_world.clear()

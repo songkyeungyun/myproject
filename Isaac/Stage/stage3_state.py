@@ -58,6 +58,7 @@ def enter():
 
 
 
+
 # 게임 종료 - 객체를 소멸
 def exit():
     game_world.clear()
