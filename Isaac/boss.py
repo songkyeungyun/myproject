@@ -40,7 +40,7 @@ class Boss():
         self.frame = 0
         self.build_behavior_tree()
         self.image = load_image('Image/boss stop.png')
-        self.life = 5
+        self.life = 90
         self.k = 0
         self.do = True
         self.invincibility = False
